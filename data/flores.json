@@ -1,0 +1,58 @@
+[
+  {
+    "id": "f1",
+    "nome": "Rosa Vermelha",
+    "precoHaste": 8.50,
+    "tamanho": "medium",
+    "imagem": "assets/images/flores/rosa_vermelha.jpg",
+    "cor": "#c70039"
+  },
+  {
+    "id": "f2",
+    "nome": "Rosa Branca",
+    "precoHaste": 8.50,
+    "tamanho": "medium",
+    "imagem": "assets/images/flores/rosa_branca.jpg",
+    "cor": "#f8f9fa"
+  },
+  {
+    "id": "f3",
+    "nome": "Girassol",
+    "precoHaste": 12.00,
+    "tamanho": "large",
+    "imagem": "assets/images/flores/girassol.jpg",
+    "cor": "#ffc300"
+  },
+  {
+    "id": "f4",
+    "nome": "Lírio Branco",
+    "precoHaste": 15.00,
+    "tamanho": "large",
+    "imagem": "assets/images/flores/lirio.jpg",
+    "cor": "#e3e3e3"
+  },
+  {
+    "id": "f5",
+    "nome": "Tulipa Rosa",
+    "precoHaste": 18.00,
+    "tamanho": "medium",
+    "imagem": "assets/images/flores/tulipa.jpg",
+    "cor": "#ff8da1"
+  },
+  {
+    "id": "f6",
+    "nome": "Gipsofila (Mosquitinho)",
+    "precoHaste": 5.00,
+    "tamanho": "small",
+    "imagem": "assets/images/flores/gipsofila.jpg",
+    "cor": "#ffffff"
+  },
+  {
+    "id": "f7",
+    "nome": "Astroemélia Colorida",
+    "precoHaste": 6.00,
+    "tamanho": "small",
+    "imagem": "assets/images/flores/astromelia.jpg",
+    "cor": "#ff5733"
+  }
+]

@@ -1,0 +1,56 @@
+[
+  {
+    "id": "v1",
+    "nome": "Vaso de Vidro Pequeno",
+    "tipo": "Vaso",
+    "preco": 30.00,
+    "capacidadeMax": 8,
+    "tamanhosPermitidos": ["small", "medium"],
+    "imagem": "assets/images/vasos/vaso_pequeno.jpg"
+  },
+  {
+    "id": "v2",
+    "nome": "Vaso de Vidro Médio",
+    "tipo": "Vaso",
+    "preco": 50.00,
+    "capacidadeMax": 15,
+    "tamanhosPermitidos": ["small", "medium"],
+    "imagem": "assets/images/vasos/vaso_medio.jpg"
+  },
+  {
+    "id": "v3",
+    "nome": "Vaso de Vidro Grande",
+    "tipo": "Vaso",
+    "preco": 80.00,
+    "capacidadeMax": 25,
+    "tamanhosPermitidos": ["small", "medium", "large"],
+    "imagem": "assets/images/vasos/vaso_grande.jpg"
+  },
+  {
+    "id": "v4",
+    "nome": "Embalagem Kraft Rústica",
+    "tipo": "Embalagem",
+    "preco": 15.00,
+    "capacidadeMax": 12,
+    "tamanhosPermitidos": ["small", "medium"],
+    "imagem": "assets/images/vasos/kraft.jpg"
+  },
+  {
+    "id": "v5",
+    "nome": "Embalagem Tecido Premium",
+    "tipo": "Embalagem",
+    "preco": 25.00,
+    "capacidadeMax": 20,
+    "tamanhosPermitidos": ["small", "medium", "large"],
+    "imagem": "assets/images/vasos/premium.jpg"
+  },
+  {
+    "id": "v6",
+    "nome": "Cesta de Vime Trançada",
+    "tipo": "Cesta",
+    "preco": 45.00,
+    "capacidadeMax": 18,
+    "tamanhosPermitidos": ["small", "medium", "large"],
+    "imagem": "assets/images/vasos/cesta_vime.jpg"
+  }
+]

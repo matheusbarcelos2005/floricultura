@@ -1,0 +1,56 @@
+[
+  {
+    "id": "p1",
+    "nome": "Buquê Encanto de Rosas",
+    "categoria": "buques",
+    "preco": 149.90,
+    "descricao": "Um clássico e elegante buquê de 12 rosas vermelhas premium com folhagens selecionadas e embalagem sofisticada.",
+    "imagem": "assets/images/produtos/buque_rosas.jpg",
+    "destaque": true
+  },
+  {
+    "id": "p2",
+    "nome": "Arranjo Abraço Solar",
+    "categoria": "arranjos",
+    "preco": 119.90,
+    "descricao": "Lindo arranjo com 5 girassóis vibrantes, complementados com flores do campo e gipsofilas em vaso rústico.",
+    "imagem": "assets/images/produtos/arranjo_girassol.jpg",
+    "destaque": true
+  },
+  {
+    "id": "p3",
+    "nome": "Orquídea Phalaenopsis Branca",
+    "categoria": "orquideas",
+    "preco": 179.00,
+    "descricao": "Uma deslumbrante orquídea de duas hastes floridas em vaso de cerâmica branca decorada. Ideal para presente.",
+    "imagem": "assets/images/produtos/orquidea_branca.jpg",
+    "destaque": true
+  },
+  {
+    "id": "p4",
+    "nome": "Cesta Despertar Especial",
+    "categoria": "cestas",
+    "preco": 249.90,
+    "descricao": "Cesta de vime completa para café da manhã com torradas, geleia, frutas, biscoitos finos e um lindo mini buquê.",
+    "imagem": "assets/images/produtos/cesta_cafe.jpg",
+    "destaque": true
+  },
+  {
+    "id": "p5",
+    "nome": "Buquê de Tulipas Coloridas",
+    "categoria": "buques",
+    "preco": 189.90,
+    "descricao": "Combinação alegre e sofisticada de tulipas em tons variados envoltas em papel celofane importado e laço de cetim.",
+    "imagem": "assets/images/produtos/buque_tulipas.jpg",
+    "destaque": false
+  },
+  {
+    "id": "p6",
+    "nome": "Vaso de Lírios Brancos",
+    "categoria": "arranjos",
+    "preco": 139.90,
+    "descricao": "Lírios brancos perfumados e imponentes plantados em um elegante vaso de vidro transparente.",
+    "imagem": "assets/images/produtos/vaso_lirios.jpg",
+    "destaque": false
+  }
+]

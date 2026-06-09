@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Finalize seu pedido Bella Fioritura. Preencha seus dados de entrega, selecione a forma de pagamento e receba suas flores agendadas.">
+  <title>Finalizar Compra | Bella Fioritura</title>
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Custom Stylesheet -->
+  <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navigation Header (rendered by main.js) -->
+  <header id="global-header"></header>
+
+  <!-- Page Banner -->
+  <section class="py-4 bg-white border-bottom shadow-sm">
+    <div class="container text-center">
+      <h1 class="h2 mb-1">Finalização do Pedido</h1>
+      <p class="text-muted mb-0 small">Insira as informações de entrega e efetue o pagamento seguro.</p>
+    </div>
+  </section>
+
+  <!-- Checkout Layout -->
+  <main class="container py-5" id="checkout-main-content">
+    <form id="checkout-form" class="needs-validation" novalidate>
+      <div class="row g-4">
+        
+        <!-- Left Column: Shipping and Delivery details -->
+        <div class="col-lg-7">
+          
+          <!-- Personal Information Card -->
+          <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 20px; background-color: var(--glass-bg);">
+            <h2 class="h5 mb-3 text-dark">1. Informações de Contato</h2>
+            <div style="width: 30px; height: 2px; background-color: var(--primary-floral); margin-bottom: 20px;"></div>
+            
+            <div class="row g-3">
+              <div class="col-sm-6">
+                <label for="c-nome" class="form-label small fw-bold">Nome Completo</label>
+                <input type="text" id="c-nome" class="form-control" placeholder="João Silva" required style="border-radius: 10px;">
+                <div class="invalid-feedback">Digite seu nome completo.</div>
+              </div>
+              <div class="col-sm-6">
+                <label for="c-telefone" class="form-label small fw-bold">Telefone / WhatsApp</label>
+                <input type="tel" id="c-telefone" class="form-control" placeholder="(11) 99999-9999" required style="border-radius: 10px;">
+                <div class="invalid-feedback">Digite um número de contato válido.</div>
+              </div>
+              <div class="col-12">
+                <label for="c-email" class="form-label small fw-bold">E-mail</label>
+                <input type="email" id="c-email" class="form-control" placeholder="joao@exemplo.com" required style="border-radius: 10px;">
+                <div class="invalid-feedback">Insira um endereço de e-mail válido para receber recibos.</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Delivery Schedule Card -->
+          <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 20px; background-color: var(--glass-bg);" id="delivery-address-card">
+            <h2 class="h5 mb-3 text-dark">2. Endereço e Agendamento da Entrega</h2>
+            <div style="width: 30px; height: 2px; background-color: var(--primary-floral); margin-bottom: 20px;"></div>
+            
+            <div class="row g-3">
+              <!-- Address Details (Only enabled if delivery shipping is chosen) -->
+              <div class="col-sm-9 address-field">
+                <label for="d-rua" class="form-label small fw-bold">Rua / Avenida</label>
+                <input type="text" id="d-rua" class="form-control address-input" placeholder="Rua das Tulipas" required style="border-radius: 10px;">
+                <div class="invalid-feedback">Insira o nome da rua.</div>
+              </div>
+              <div class="col-sm-3 address-field">
+                <label for="d-numero" class="form-label small fw-bold">Número</label>
+                <input type="text" id="d-numero" class="form-control address-input" placeholder="123" required style="border-radius: 10px;">
+                <div class="invalid-feedback">Preencha.</div>
+              </div>
+              <div class="col-sm-6 address-field">
+                <label for="d-bairro" class="form-label small fw-bold">Bairro</label>
+                <input type="text" id="d-bairro" class="form-control address-input" placeholder="Jardim das Flores" required style="border-radius: 10px;">
+                <div class="invalid-feedback">Insira o bairro.</div>
+              </div>
+              <div class="col-sm-6 address-field">
+                <label for="d-comp" class="form-label small fw-bold">Complemento / Ref.</label>
+                <input type="text" id="d-comp" class="form-control" placeholder="Apto 45, Bloco B" style="border-radius: 10px;">
+              </div>
+              
+              <!-- Pickup placeholder message -->
+              <div class="col-12 d-none" id="pickup-info-msg">
+                <div class="alert alert-info p-3 mb-0" style="border-radius: 12px;">
+                  📍 <strong>Bella Floricultura:</strong> Você escolheu retirar o produto gratuitamente em nossa loja física local (Av. das Rosas, 750). Por favor, indique a data e o horário desejados abaixo.
+                </div>
+              </div>
+
+              <!-- Date Picker & Hour Range Selector -->
+              <div class="col-sm-6">
+                <label for="d-data" class="form-label small fw-bold">Data da Entrega / Retirada</label>
+                <input type="date" id="d-data" class="form-control" required style="border-radius: 10px;">
+                <div class="invalid-feedback">Escolha uma data de entrega.</div>
+              </div>
+              <div class="col-sm-6">
+                <label for="d-horario" class="form-label small fw-bold">Período do Dia</label>
+                <select id="d-horario" class="form-select" required style="border-radius: 10px;">
+                  <option value="" disabled selected>Escolha um horário...</option>
+                  <option value="Manhã (08h às 11h)">Manhã (08h às 11h)</option>
+                  <option value="Almoço (11h às 14h)">Almoço (11h às 14h)</option>
+                  <option value="Tarde (14h às 17h)">Tarde (14h às 17h)</option>
+                  <option value="Final do Dia (17h às 19h)">Final do Dia (17h às 19h)</option>
+                </select>
+                <div class="invalid-feedback">Selecione uma faixa de horário.</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Card/Gift message -->
+          <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 20px; background-color: var(--glass-bg);">
+            <h2 class="h5 mb-3 text-dark">3. Mensagem para o Cartão de Presente (Opcional)</h2>
+            <div style="width: 30px; height: 2px; background-color: var(--primary-floral); margin-bottom: 20px;"></div>
+            
+            <div>
+              <label for="c-mensagem" class="form-label small fw-bold">Escreva sua Mensagem</label>
+              <textarea id="c-mensagem" class="form-control" rows="3" placeholder="Escreva aqui a mensagem que será impressa no cartão de presente do destinatário..." style="border-radius: 12px;"></textarea>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Right Column: Cart summary and payment methods -->
+        <div class="col-lg-5">
+          
+          <!-- Summary Review Card -->
+          <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 20px; background-color: var(--glass-bg);">
+            <h2 class="h5 mb-3 text-dark">Itens do Pedido</h2>
+            <div style="width: 30px; height: 2px; background-color: var(--primary-floral); margin-bottom: 20px;"></div>
+            
+            <div id="checkout-summary-items-list" class="mb-3">
+              <!-- Rendered dynamically by js/checkout.js -->
+            </div>
+            
+            <div class="border-top pt-3 text-muted small">
+              <div class="d-flex justify-content-between mb-1">
+                <span>Subtotal</span>
+                <span id="checkout-subtotal-price">R$ 0,00</span>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <span>Frete / Taxa de Serviço</span>
+                <span id="checkout-shipping-price">R$ 0,00</span>
+              </div>
+              <div class="d-flex justify-content-between align-items-center border-top pt-2 text-dark font-sans fw-bold">
+                <span class="h6 mb-0 font-sans fw-bold">Valor Total</span>
+                <span class="h5 mb-0 fw-bold" id="checkout-total-price">R$ 0,00</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Payment Selection Card -->
+          <div class="card border-0 shadow-sm p-4" style="border-radius: 20px; background-color: var(--glass-bg);">
+            <h2 class="h5 mb-3 text-dark">4. Forma de Pagamento</h2>
+            <div style="width: 30px; height: 2px; background-color: var(--primary-floral); margin-bottom: 20px;"></div>
+            
+            <!-- Radios selections -->
+            <div class="d-flex gap-3 mb-3">
+              <div class="form-check flex-fill p-2.5 border rounded" style="background-color: white;">
+                <input class="form-check-input ms-1" type="radio" name="paymentOption" id="pay-pix" value="PIX" checked>
+                <label class="form-check-label small fw-bold ms-2" for="pay-pix">
+                  ⚡ PIX (Imediato)
+                </label>
+              </div>
+              <div class="form-check flex-fill p-2.5 border rounded" style="background-color: white;">
+                <input class="form-check-input ms-1" type="radio" name="paymentOption" id="pay-card" value="CARTAO">
+                <label class="form-check-label small fw-bold ms-2" for="pay-card">
+                  💳 Cartão de Crédito
+                </label>
+              </div>
+            </div>
+            
+            <!-- Credit Card Form Fields -->
+            <div id="credit-card-fields-box" class="d-none border p-3 rounded mb-4" style="background-color: white; animation: fadeIn 0.3s ease;">
+              <h3 class="h6 mb-3 text-muted text-uppercase small" style="letter-spacing: 0.5px;">Dados do Cartão</h3>
+              <div class="row g-2">
+                <div class="col-12">
+                  <label for="cc-number" class="form-label small text-muted mb-1">Número do Cartão</label>
+                  <input type="text" id="cc-number" class="form-control form-control-sm" placeholder="4444 4444 4444 4444" style="border-radius: 6px;">
+                </div>
+                <div class="col-12">
+                  <label for="cc-name" class="form-label small text-muted mb-1">Nome Impresso no Cartão</label>
+                  <input type="text" id="cc-name" class="form-control form-control-sm" placeholder="JOAO H SILVA" style="border-radius: 6px;">
+                </div>
+                <div class="col-6">
+                  <label for="cc-expiry" class="form-label small text-muted mb-1">Validade (MM/AA)</label>
+                  <input type="text" id="cc-expiry" class="form-control form-control-sm" placeholder="12/29" style="border-radius: 6px;">
+                </div>
+                <div class="col-6">
+                  <label for="cc-cvv" class="form-label small text-muted mb-1">CVV</label>
+                  <input type="text" id="cc-cvv" class="form-control form-control-sm" placeholder="123" style="border-radius: 6px;">
+                </div>
+              </div>
+            </div>
+            
+            <!-- Submit checkout button -->
+            <button type="submit" class="btn btn-premium w-100 py-3" id="btn-submit-order">
+              Efetuar Pagamento ➔
+            </button>
+          </div>
+          
+        </div>
+      </div>
+    </form>
+  </main>
+
+  <!-- SUCCESS & PAYMENT SIMULATOR CONTAINER (Replaces Main Content on order submission) -->
+  <main class="container py-5 d-none" id="payment-simulator-view">
+    <div class="row justify-content-center">
+      <div class="col-md-7 col-lg-6">
+        <div class="card border-0 shadow p-5 text-center" style="border-radius: 28px; background-color: var(--glass-bg);">
+          
+          <!-- State 1: Awaiting Payment -->
+          <div id="sim-state-waiting">
+            <span class="fs-1 d-block mb-3 text-warning">⌛</span>
+            <h2 class="h3 text-dark mb-2" id="payment-title-state">Pedido Criado com Sucesso!</h2>
+            <p class="text-muted small">Aguardando confirmação de pagamento do gateway.</p>
+            <div style="width: 40px; height: 3px; background-color: var(--primary-floral); margin: 20px auto;"></div>
+            
+            <!-- Conditional Pix QR Panel -->
+            <div id="sim-pix-panel" class="mb-4 d-none">
+              <p class="small text-muted mb-3">Escaneie o QR Code abaixo pelo aplicativo do seu banco para pagar o pedido:</p>
+              <div class="pix-qr-container mb-3">
+                <!-- Mock QR Code canvas drawing placeholder -->
+                <div class="pix-qr-code d-flex align-items-center justify-content-center">
+                  <span class="fs-1">📱</span>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-dark px-3 py-1 rounded-pill mt-2" onclick="navigator.clipboard.writeText('00020101021226850014br.gov.bcb.pix2563pix.bellafioritura.com.br/gateway/payment/12958371923')">
+                  Copiar Código PIX
+                </button>
+              </div>
+            </div>
+            
+            <!-- Conditional Credit Card Loading Spinner -->
+            <div id="sim-card-panel" class="mb-4 d-none">
+              <div class="spinner-border text-primary my-4" role="status">
+                <span class="visually-hidden">Processando transação...</span>
+              </div>
+              <p class="small text-muted">Aprovando transação junto à operadora do cartão...</p>
+            </div>
+            
+            <!-- Mock Webhook countdown -->
+            <div class="alert alert-warning text-start p-3 small" style="border-radius: 12px; border-left: 4px solid var(--primary-dark);">
+              🔔 <strong>Simulador de Gateway (Webhook):</strong> O site detectará o pagamento automaticamente. Um webhook simulado disparará a confirmação do pagamento em <strong id="webhook-countdown">10</strong> segundos.
+            </div>
+          </div>
+          
+          <!-- State 2: Payment Confirmed Success Receipt -->
+          <div id="sim-state-success" class="d-none">
+            <span class="fs-1 d-block mb-3 text-success">✓</span>
+            <h2 class="h3 text-dark mb-1">Pagamento Aprovado!</h2>
+            <p class="text-success fw-bold small">Pedido #<span id="success-order-id">1000</span> enviado para preparação.</p>
+            
+            <div class="alert alert-success p-3 text-start small mb-4 mt-4" style="border-radius: 12px;">
+              🎉 <strong>Obrigado por comprar conosco!</strong> Sua comanda foi gerada automaticamente e enviada para a equipe de floristas iniciar a separação de suas flores frescas.
+            </div>
+            
+            <div class="d-flex flex-column gap-2">
+              <button type="button" class="btn btn-premium w-100 py-2.5" id="btn-success-print-comanda">
+                Imprimir Comanda do Pedido
+              </button>
+              <a href="painel.html" class="btn btn-sage w-100 py-2.5">
+                Ir para o Painel Administrativo ➔
+              </a>
+              <a href="index.html" class="btn btn-outline-premium w-100 py-2.5">
+                Voltar à Página Inicial
+              </a>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Navigation Footer (rendered by main.js) -->
+  <footer id="global-footer"></footer>
+
+  <!-- Bootstrap 5 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Common Logic -->
+  <script src="js/main.js"></script>
+  
+  <!-- Checkout Local Logic controller -->
+  <script src="js/checkout.js"></script>
+</body>
+</html>

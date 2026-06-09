@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Confira os itens adicionados ao seu carrinho de compras, altere quantidades e calcule o frete de entrega.">
+  <title>Seu Carrinho de Compras | Bella Fioritura</title>
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Custom Stylesheet -->
+  <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navigation Header (rendered by main.js) -->
+  <header id="global-header"></header>
+
+  <!-- Title Section -->
+  <section class="py-4 bg-white border-bottom shadow-sm">
+    <div class="container text-center">
+      <h1 class="h2 mb-1">Seu Carrinho de Compras</h1>
+      <p class="text-muted mb-0 small">Revise os itens selecionados antes de finalizar seu pedido.</p>
+    </div>
+  </section>
+
+  <!-- Cart Content -->
+  <main class="container py-5">
+    <div class="row g-4" id="cart-container-main">
+      
+      <!-- Cart Table Column -->
+      <div class="col-lg-8" id="cart-items-column">
+        <div class="card border-0 shadow-sm p-4" style="border-radius: 24px; background-color: var(--glass-bg);">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="h5 mb-0 text-dark">Itens Escolhidos</h2>
+            <button type="button" class="btn btn-outline-danger btn-sm rounded-pill py-1 px-3" id="btn-clear-cart" style="font-size:0.75rem;">
+              Esvaziar Carrinho
+            </button>
+          </div>
+          <hr class="opacity-10 my-3">
+          
+          <div id="cart-items-list-container">
+            <!-- Dynamically rendered by js/carrinho.js -->
+            <div class="text-center py-5">
+              <div class="spinner-border text-secondary" role="status">
+                <span class="visually-hidden">Carregando itens...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Summary Sidebar Column -->
+      <aside class="col-lg-4">
+        <div class="card border-0 shadow-sm p-4 sticky-lg-top" style="top: 105px; border-radius: 24px; background-color: var(--glass-bg);">
+          <h2 class="h5 mb-3 text-dark">Resumo do Pedido</h2>
+          <div style="width: 30px; height: 2px; background-color: var(--primary-floral); margin-bottom: 20px;"></div>
+          
+          <!-- Price metrics -->
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted small">Subtotal</span>
+            <span class="fw-bold" id="cart-subtotal-price">R$ 0,00</span>
+          </div>
+          
+          <!-- Shipping options -->
+          <div class="mb-3 pt-2 border-top">
+            <label class="form-label small fw-bold text-muted d-block">Tipo de Entrega</label>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="radio" name="shippingRadio" id="ship-delivery" value="15.00" checked>
+              <label class="form-check-label small" for="ship-delivery">
+                Entrega Padrão (Agendada) - <strong>R$ 15,00</strong>
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="shippingRadio" id="ship-pickup" value="0.00">
+              <label class="form-check-label small" for="ship-pickup">
+                Retirar na Floricultura - <strong>Grátis</strong>
+              </label>
+            </div>
+          </div>
+          
+          <!-- Total price metrics -->
+          <div class="d-flex justify-content-between align-items-center mb-4 pt-3 border-top">
+            <span class="h6 mb-0 text-dark font-sans fw-bold">Valor Total</span>
+            <span class="h4 mb-0 text-dark fw-bold" id="cart-total-price">R$ 0,00</span>
+          </div>
+          
+          <button type="button" class="btn btn-premium w-100 py-3 mb-3" id="btn-cart-checkout">
+            Finalizar Compra ➔
+          </button>
+          
+          <a href="produtos.html" class="btn btn-outline-premium w-100 py-2.5">
+            ✿ Continuar Comprando
+          </a>
+        </div>
+      </aside>
+      
+    </div>
+
+    <!-- Empty state template -->
+    <div class="row d-none" id="cart-empty-state">
+      <div class="col-12 text-center py-5 bg-white shadow-sm rounded-4">
+        <span class="fs-1 d-block mb-3">🛒</span>
+        <h2 class="h4 text-dark mb-2">Seu Carrinho está Vazio</h2>
+        <p class="text-muted mb-4">Parece que você ainda não adicionou produtos ou buquês personalizados.</p>
+        <div class="d-flex gap-3 justify-content-center">
+          <a href="produtos.html" class="btn btn-premium px-4 py-2.5">Ver Catálogo</a>
+          <a href="montar-buque.html" class="btn btn-outline-premium px-4 py-2.5">Montar Buquê</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Navigation Footer (rendered by main.js) -->
+  <footer id="global-footer"></footer>
+
+  <!-- Bootstrap 5 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Common Logic -->
+  <script src="js/main.js"></script>
+  
+  <!-- Cart Local script controller -->
+  <script src="js/carrinho.js"></script>
+</body>
+</html>

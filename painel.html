@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Painel de Administração Bella Fioritura. Controle de pedidos de floricultura, alteração de status de produção, estoque de flores e comandas de impressão.">
+  <title>Painel da Floricultura | Bella Fioritura</title>
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Custom Stylesheet -->
+  <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navigation Header (rendered by main.js) -->
+  <header id="global-header"></header>
+
+  <!-- Page Title -->
+  <section class="py-4 bg-white border-bottom shadow-sm">
+    <div class="container text-center">
+      <h1 class="h2 mb-1">Painel Administrativo</h1>
+      <p class="text-muted mb-0 small">Gerencie pedidos da floricultura, imprima comandas de produção e controle o estoque de insumos.</p>
+    </div>
+  </section>
+
+  <!-- Admin Area Workspace -->
+  <main class="container py-5">
+    
+    <!-- Navigation Tabs -->
+    <ul class="nav nav-pills mb-4 justify-content-center gap-2" id="adminTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active rounded-pill px-4" id="orders-tab" data-bs-toggle="pill" data-bs-target="#orders-pane" type="button" role="tab" aria-controls="orders-pane" aria-selected="true">
+          📦 Pedidos Recebidos
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link rounded-pill px-4" id="stock-tab" data-bs-toggle="pill" data-bs-target="#stock-pane" type="button" role="tab" aria-controls="stock-pane" aria-selected="false">
+          🌿 Controle de Estoque
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link rounded-pill px-4" id="stats-tab" data-bs-toggle="pill" data-bs-target="#stats-pane" type="button" role="tab" aria-controls="stats-pane" aria-selected="false">
+          📊 Faturamento & Estatísticas
+        </button>
+      </li>
+    </ul>
+
+    <!-- Tabs Panes Container -->
+    <div class="tab-content" id="adminTabsContent">
+      
+      <!-- TAB 1: Orders Pane -->
+      <div class="tab-pane fade show active" id="orders-pane" role="tabpanel" aria-labelledby="orders-tab">
+        <div class="card border-0 shadow-sm p-4 admin-card" style="border-radius: 20px; background-color: var(--glass-bg);">
+          
+          <!-- Filters & Actions Header -->
+          <div class="row g-3 align-items-center mb-4 pb-3 border-bottom">
+            <div class="col-md-5">
+              <label for="order-filter-status" class="form-label small fw-bold text-muted">Filtrar por Status</label>
+              <select id="order-filter-status" class="form-select border-secondary-subtle" style="border-radius: 12px;">
+                <option value="all">Mostrar Todos</option>
+                <option value="Pendente de pagamento">Pendente de Pagamento</option>
+                <option value="Pago">Pago (Aprovado)</option>
+                <option value="Em preparação">Em Preparação</option>
+                <option value="Saiu para entrega">Saiu para Entrega</option>
+                <option value="Entregue">Entregue</option>
+                <option value="Cancelado">Cancelado</option>
+              </select>
+            </div>
+            <div class="col-md-5">
+              <label for="order-search-input" class="form-label small fw-bold text-muted">Pesquisar Pedido</label>
+              <input type="text" id="order-search-input" class="form-control border-secondary-subtle" placeholder="Ex: Nome do cliente ou ID..." style="border-radius: 12px;">
+            </div>
+            <div class="col-md-2 text-md-end mt-md-4 pt-2">
+              <button class="btn btn-outline-premium w-100" id="btn-refresh-orders" style="border-radius: 12px;">
+                Atualizar
+              </button>
+            </div>
+          </div>
+          
+          <!-- Orders Table -->
+          <div class="table-responsive">
+            <table class="table align-middle table-hover text-nowrap" id="orders-admin-table" style="font-size:0.9rem;">
+              <thead class="table-light">
+                <tr>
+                  <th scope="col">Pedido</th>
+                  <th scope="col">Data</th>
+                  <th scope="col">Cliente</th>
+                  <th scope="col">Entrega / Agendamento</th>
+                  <th scope="col">Total</th>
+                  <th scope="col">Status</th>
+                  <th scope="col" class="text-center">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="orders-admin-tbody">
+                <!-- Rendered dynamically by js/painel.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      
+      <!-- TAB 2: Stock Pane -->
+      <div class="tab-pane fade" id="stock-pane" role="tabpanel" aria-labelledby="stock-tab">
+        <div class="card border-0 shadow-sm p-4 admin-card" style="border-radius: 20px; background-color: var(--glass-bg);">
+          <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+            <div>
+              <h2 class="h5 mb-1 text-dark">Estoque de Hastes e Vasos</h2>
+              <p class="text-muted small mb-0">Monitore o estoque disponível de flores e recipientes. Níveis abaixo de 15 são sinalizados como Alerta.</p>
+            </div>
+            <button class="btn btn-premium btn-sm rounded-pill py-2 px-4" id="btn-save-stock">
+              Salvar Alterações
+            </button>
+          </div>
+          
+          <!-- Stock grid items -->
+          <div class="row g-4" id="stock-items-container">
+            <!-- Rendered dynamically by js/painel.js -->
+          </div>
+        </div>
+      </div>
+      
+      <!-- TAB 3: Statistics Pane -->
+      <div class="tab-pane fade" id="stats-pane" role="tabpanel" aria-labelledby="stats-tab">
+        <div class="row g-4">
+          <!-- Totals counters Cards -->
+          <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-4 text-center h-100" style="border-radius: 20px; background-color: var(--glass-bg);">
+              <span class="fs-1 d-block mb-2">💰</span>
+              <h3 class="h6 text-muted text-uppercase small" style="letter-spacing:0.5px;">Faturamento Total Aprovado</h3>
+              <h4 class="display-6 fw-bold text-dark mt-2 mb-0" id="stats-total-revenue">R$ 0,00</h4>
+              <p class="text-muted small mt-1 mb-0">(Exclui pedidos pendentes/cancelados)</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-4 text-center h-100" style="border-radius: 20px; background-color: var(--glass-bg);">
+              <span class="fs-1 d-block mb-2">🌸</span>
+              <h3 class="h6 text-muted text-uppercase small" style="letter-spacing:0.5px;">Recipiente Mais Vendido</h3>
+              <h4 class="h3 fw-bold text-dark mt-3 mb-0" id="stats-top-vase">--</h4>
+              <p class="text-muted small mt-2 mb-0" id="stats-top-vase-desc">0 unidades vendidas</p>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card border-0 shadow-sm p-4 text-center h-100" style="border-radius: 20px; background-color: var(--glass-bg);">
+              <span class="fs-1 d-block mb-2">📊</span>
+              <h3 class="h6 text-muted text-uppercase small" style="letter-spacing:0.5px;">Pedidos Recebidos</h3>
+              <h4 class="display-6 fw-bold text-dark mt-2 mb-0" id="stats-total-orders">0</h4>
+              <p class="text-muted small mt-1 mb-0" id="stats-completed-orders">0 entregues com sucesso</p>
+            </div>
+          </div>
+          
+          <!-- Detailed statistics columns lists -->
+          <div class="col-md-6">
+            <div class="card border-0 shadow-sm p-4 h-100" style="border-radius: 20px; background-color: var(--glass-bg);">
+              <h3 class="h5 mb-3 text-dark">Hastes de Flores Mais Utilizadas</h3>
+              <div style="width: 30px; height: 2px; background-color: var(--primary-floral); margin-bottom: 20px;"></div>
+              
+              <ul class="list-group list-group-flush" id="stats-top-flowers-list">
+                <!-- Dynamically populated -->
+              </ul>
+            </div>
+          </div>
+          
+          <div class="col-md-6">
+            <div class="card border-0 shadow-sm p-4 h-100" style="border-radius: 20px; background-color: var(--glass-bg);">
+              <h3 class="h5 mb-3 text-dark">Distribuição por Status</h3>
+              <div style="width: 30px; height: 2px; background-color: var(--primary-floral); margin-bottom: 20px;"></div>
+              
+              <ul class="list-group list-group-flush" id="stats-status-distribution-list">
+                <!-- Dynamically populated -->
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </main>
+
+  <!-- COMANDA PREVIEW MODAL -->
+  <div class="modal fade" id="comandaModal" tabindex="-1" aria-labelledby="comandaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" style="border-radius:24px; border:none; background-color:var(--champagne);">
+        <div class="modal-header border-bottom-0 pb-0">
+          <h3 class="modal-title h5 text-dark" id="comandaModalLabel">Visualizar Comanda</h3>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="comanda-modal-body-container" class="bg-white p-3 border rounded">
+            <!-- Injected dynamically by painel.js -->
+          </div>
+        </div>
+        <div class="modal-footer border-top-0 pt-0 justify-content-between">
+          <button type="button" class="btn btn-outline-premium" data-bs-dismiss="modal">Fechar</button>
+          <button type="button" class="btn btn-premium px-4" id="btn-modal-print-comanda">
+            Imprimir Comanda 🖨️
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dynamic printer output block needed for clean browser window printing redirects -->
+  <div id="comanda-print-zone" class="d-none"></div>
+
+  <!-- Navigation Footer (rendered by main.js) -->
+  <footer id="global-footer"></footer>
+
+  <!-- Bootstrap 5 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Common Logic -->
+  <script src="js/main.js"></script>
+  
+  <!-- Admin local controller JS script -->
+  <script src="js/painel.js"></script>
+</body>
+</html>

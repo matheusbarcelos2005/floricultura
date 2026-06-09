@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Use o nosso configurador online para criar um arranjo ou buquê sob medida. Escolha as flores, a embalagem e veja o resultado final com preços em tempo real.">
+  <title>Monte Seu Buquê | Bella Fioritura</title>
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Custom Stylesheet -->
+  <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navigation Header (rendered by main.js) -->
+  <header id="global-header"></header>
+
+  <!-- Page Banner -->
+  <section class="py-4 bg-white border-bottom shadow-sm">
+    <div class="container text-center">
+      <h1 class="h2 mb-1">Configurador de Buquês Artesanais</h1>
+      <p class="text-muted mb-0 small">Siga as etapas para criar uma obra de arte floral do seu jeito.</p>
+    </div>
+  </section>
+
+  <!-- Builder Workspace -->
+  <main class="container py-5">
+    <div class="row g-4">
+      
+      <!-- Left Column: Sticky Interactive Visualizer -->
+      <div class="col-lg-5">
+        <div class="visualizer-container sticky-lg-top" style="top: 105px;">
+          <!-- Studio Header Info -->
+          <div class="position-absolute w-100 p-3 d-flex justify-content-between align-items-center" style="z-index: 20; background: linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 100%);">
+            <div>
+              <span class="badge bg-secondary mb-1 text-uppercase" style="font-size:0.65rem;">Visualização Virtual</span>
+              <h2 class="h6 mb-0 text-dark" id="visualizer-title">Seu Buquê Personalizado</h2>
+            </div>
+            <div class="text-end">
+              <span class="d-block small text-muted">Hastes Usadas</span>
+              <span class="fw-bold h5 mb-0" id="stem-count-badge">0 / --</span>
+            </div>
+          </div>
+          
+          <!-- Studio Visual Canvas -->
+          <div class="visual-canvas" id="canvas-container">
+            <!-- Dynamic flower elements will spawn here -->
+            <div class="bouquet-flowers-container" id="flowers-render-zone"></div>
+            
+            <!-- Base Container -->
+            <div id="base-render-zone" class="w-100 text-center position-absolute bottom-0 mb-4" style="z-index: 10;">
+              <span class="text-muted d-block py-4">Selecione uma base na Etapa 2</span>
+            </div>
+            
+            <!-- Floating price badge -->
+            <div class="position-absolute bottom-3 right-3 bg-white px-3 py-2 rounded-pill shadow-sm d-flex align-items-center gap-2" style="z-index: 20; border: 1px solid rgba(0,0,0,0.05); bottom: 15px; right: 15px;">
+              <span class="small text-muted">Total:</span>
+              <span class="fw-bold text-dark" id="visualizer-total-price">R$ 0,00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Right Column: Wizard Steps Form -->
+      <div class="col-lg-7">
+        
+        <!-- Wizard Navigation Stepper -->
+        <div class="wizard-steps">
+          <div class="wizard-step active" id="step-nav-1">
+            <div class="step-bubble">1</div>
+            <div class="step-label">Estilo</div>
+          </div>
+          <div class="wizard-step" id="step-nav-2">
+            <div class="step-bubble">2</div>
+            <div class="step-label">Base</div>
+          </div>
+          <div class="wizard-step" id="step-nav-3">
+            <div class="step-bubble">3</div>
+            <div class="step-label">Flores</div>
+          </div>
+          <div class="wizard-step" id="step-nav-4">
+            <div class="step-bubble">4</div>
+            <div class="step-label">Mimos</div>
+          </div>
+          <div class="wizard-step" id="step-nav-5">
+            <div class="step-bubble">5</div>
+            <div class="step-label">Revisão</div>
+          </div>
+        </div>
+        
+        <!-- Alert Banner for compatibility rules -->
+        <div class="alert alert-danger d-flex align-items-center gap-3 mb-4 shadow-sm" role="alert" id="compatibility-alert" style="display: none !important; border-radius: 12px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-exclamation-triangle-fill flex-shrink-0" viewBox="0 0 16 16">
+            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+          </svg>
+          <div id="compatibility-alert-text" class="small">
+            Aviso de compatibilidade.
+          </div>
+        </div>
+
+        <div class="card border-0 shadow-sm p-4" style="border-radius: 24px; background-color: var(--glass-bg);">
+          
+          <!-- STEP 1: Choose Style -->
+          <div class="wizard-pane active" id="pane-1">
+            <h3 class="h4 mb-2">Etapa 1: Qual o estilo do seu presente?</h3>
+            <p class="text-muted small mb-4">Escolha a estrutura geral do arranjo que deseja montar.</p>
+            
+            <div class="row g-3">
+              <div class="col-sm-6">
+                <div class="selectable-card text-center p-4 h-100" data-style-option="Buquê">
+                  <span class="fs-1 d-block mb-2">💐</span>
+                  <h4 class="h6 mb-1">Buquê Tradicional</h4>
+                  <p class="text-muted small mb-0">Ramos floridos dispostos à mão com laço decorativo.</p>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="selectable-card text-center p-4 h-100" data-style-option="Vaso">
+                  <span class="fs-1 d-block mb-2">🏺</span>
+                  <h4 class="h6 mb-1">Arranjo em Vaso</h4>
+                  <p class="text-muted small mb-0">Flores dispostas artisticamente em vaso de vidro refinado.</p>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="selectable-card text-center p-4 h-100" data-style-option="Cesta">
+                  <span class="fs-1 d-block mb-2">🧺</span>
+                  <h4 class="h6 mb-1">Cesta Decorada</h4>
+                  <p class="text-muted small mb-0">Flores frescas acomodadas em uma cesta de vime campestre.</p>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="selectable-card text-center p-4 h-100" data-style-option="Arranjo">
+                  <span class="fs-1 d-block mb-2">🌿</span>
+                  <h4 class="h6 mb-1">Arranjo de Mesa</h4>
+                  <p class="text-muted small mb-0">Composição baixa estruturada em espuma floral e folhagens.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- STEP 2: Choose Recipient Base -->
+          <div class="wizard-pane" id="pane-2">
+            <h3 class="h4 mb-2">Etapa 2: Escolha o recipiente ou embalagem</h3>
+            <p class="text-muted small mb-4">Cada opção possui uma limitação física de hastes e tamanho de flor suportado.</p>
+            
+            <div class="row g-3" id="bases-options-container">
+              <!-- Dynamically populated from data/vasos.json -->
+            </div>
+          </div>
+          
+          <!-- STEP 3: Choose Flowers -->
+          <div class="wizard-pane" id="pane-3">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <div>
+                <h3 class="h4 mb-1">Etapa 3: Selecione as flores</h3>
+                <p class="text-muted small mb-0">Adicione hastes de flores e configure a quantidade de cada espécie.</p>
+              </div>
+              <span class="badge bg-secondary p-2" id="stem-count-indicator">0 / 0 hastes</span>
+            </div>
+            <hr class="my-3 opacity-10">
+            
+            <div class="row g-3" id="flowers-options-container">
+              <!-- Dynamically populated from data/flores.json -->
+            </div>
+          </div>
+          
+          <!-- STEP 4: Choose Gifts and Add-ons -->
+          <div class="wizard-pane" id="pane-4">
+            <h3 class="h4 mb-2">Etapa 4: Adicione mimos e complementos</h3>
+            <p class="text-muted small mb-4">Quer deixar o presente ainda mais inesquecível? Adicione mimos especiais.</p>
+            
+            <div class="row g-3" id="complements-options-container">
+              <!-- Dynamically populated from data/complementos.json -->
+            </div>
+          </div>
+          
+          <!-- STEP 5: Review & Checkout Add to Cart -->
+          <div class="wizard-pane" id="pane-5">
+            <h3 class="h4 mb-2">Etapa 5: Revise o seu Buquê Personalizado</h3>
+            <p class="text-muted small mb-4">Confira toda a composição antes de avançar para o carrinho.</p>
+            
+            <div class="bg-white p-4 rounded-3 border mb-4">
+              <h4 class="h5 mb-3 text-dark border-bottom pb-2">Composição do Pedido</h4>
+              
+              <!-- Style & Base summary -->
+              <div class="row mb-3">
+                <div class="col-6">
+                  <span class="small text-muted d-block">Estilo</span>
+                  <strong id="review-style-text">--</strong>
+                </div>
+                <div class="col-6">
+                  <span class="small text-muted d-block">Base / Embalagem</span>
+                  <strong id="review-base-text">--</strong>
+                </div>
+              </div>
+              
+              <!-- Flower list details -->
+              <div class="mb-3">
+                <span class="small text-muted d-block mb-2">Flores Escolhidas</span>
+                <ul class="list-group list-group-flush small" id="review-flowers-list">
+                  <li class="list-group-item text-muted">Nenhuma flor adicionada.</li>
+                </ul>
+              </div>
+              
+              <!-- Complements list details -->
+              <div class="mb-3">
+                <span class="small text-muted d-block mb-2">Complementos</span>
+                <ul class="list-group list-group-flush small" id="review-complements-list">
+                  <li class="list-group-item text-muted">Nenhum mimo adicionado.</li>
+                </ul>
+              </div>
+              
+              <!-- Total summary price -->
+              <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                <span class="h6 mb-0 text-dark">Valor Total do Buquê:</span>
+                <span class="h4 mb-0 text-dark fw-bold" id="review-total-price">R$ 0,00</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Navigation Wizard Action buttons -->
+          <div class="d-flex justify-content-between mt-4 border-top pt-4">
+            <button type="button" class="btn btn-outline-premium py-2 px-4" id="btn-wizard-prev" disabled>
+              ➔ Voltar
+            </button>
+            <button type="button" class="btn btn-premium py-2 px-4" id="btn-wizard-next">
+              Avançar ➔
+            </button>
+          </div>
+          
+        </div>
+      </div>
+      
+    </div>
+  </main>
+
+  <!-- Navigation Footer (rendered by main.js) -->
+  <footer id="global-footer"></footer>
+
+  <!-- Bootstrap 5 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Common Logic -->
+  <script src="js/main.js"></script>
+  
+  <!-- Builder Controller Script -->
+  <script src="js/montar-buque.js"></script>
+</body>
+</html>

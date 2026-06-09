@@ -1,0 +1,30 @@
+[
+  {
+    "id": "c1",
+    "nome": "Caixa de Trufas de Chocolate",
+    "preco": 39.90,
+    "descricao": "Deliciosas trufas artesanais de chocolate belga (120g).",
+    "imagem": "assets/images/complementos/trufas.jpg"
+  },
+  {
+    "id": "c2",
+    "nome": "Urso de Pelúcia Fofo",
+    "preco": 49.90,
+    "descricao": "Urso de pelúcia super macio e antialérgico de 25cm.",
+    "imagem": "assets/images/complementos/pelucia.jpg"
+  },
+  {
+    "id": "c3",
+    "nome": "Cartão de Mensagem Premium",
+    "preco": 10.00,
+    "descricao": "Lindo cartão impresso em papel texturizado para sua mensagem.",
+    "imagem": "assets/images/complementos/cartao.jpg"
+  },
+  {
+    "id": "c4",
+    "nome": "Balão Metalizado de Coração",
+    "preco": 15.00,
+    "descricao": "Balão inflado com gás hélio em formato de coração vermelho escrito 'Com Amor'.",
+    "imagem": "assets/images/complementos/balao.jpg"
+  }
+]
