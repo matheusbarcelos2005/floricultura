@@ -134,10 +134,11 @@ function filterAndRenderCatalog() {
   
   // 1. Filtering
   let filtered = allProducts.filter(product => {
+    const isAtivo = product.ativo !== false;
     const matchesCategory = currentCategory === 'all' || product.categoria === currentCategory;
-    const matchesSearch = product.nome.toLowerCase().includes(currentSearch) || 
+    const matchesSearch = product.nome.toLowerCase().includes(currentSearch) ||
                           product.descricao.toLowerCase().includes(currentSearch);
-    return matchesCategory && matchesSearch;
+    return isAtivo && matchesCategory && matchesSearch;
   });
   
   // 2. Sorting

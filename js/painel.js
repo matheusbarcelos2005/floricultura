@@ -1,3 +1,14 @@
+// Admin password check — runs immediately before any DOM interaction
+(function checkAdminPassword() {
+  if (sessionStorage.getItem('painel_auth') === 'ok') return;
+  const pwd = prompt('Painel Administrativo – Bella Fioritura\n\nDigite a senha de acesso:');
+  if (pwd === 'floricultura2026') {
+    sessionStorage.setItem('painel_auth', 'ok');
+  } else {
+    window.location.replace('index.html');
+  }
+})();
+
 // Globals
 let ordersList = [];
 let dbFlores = [];
@@ -5,6 +16,7 @@ let dbVasos = [];
 let dbComplementos = [];
 let stockLevels = {};
 let selectedOrderForComanda = null;
+let allProductsAdmin = [];
 
 document.addEventListener('DOMContentLoaded', async () => {
   // Load databases
@@ -33,6 +45,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (stockTabBtn) {
     stockTabBtn.addEventListener('click', () => {
       renderStockLevels();
+    });
+  }
+
+  const produtosTabBtn = document.getElementById('produtos-tab');
+  if (produtosTabBtn) {
+    produtosTabBtn.addEventListener('click', () => {
+      renderProductsTab();
     });
   }
 
@@ -148,6 +167,7 @@ function renderOrdersTable() {
             <option value="Saiu para entrega" ${order.status === 'Saiu para entrega' ? 'selected' : ''}>Saiu p/ Entrega</option>
             <option value="Entregue" ${order.status === 'Entregue' ? 'selected' : ''}>Entregue</option>
             <option value="Cancelado" ${order.status === 'Cancelado' ? 'selected' : ''}>Cancelado</option>
+            <option value="Reembolsado" ${order.status === 'Reembolsado' ? 'selected' : ''}>Reembolsado</option>
           </select>
         </td>
         <td class="text-center">
@@ -443,7 +463,8 @@ function calculateStatistics() {
       'Em preparação',
       'Saiu para entrega',
       'Entregue',
-      'Cancelado'
+      'Cancelado',
+      'Reembolsado'
     ];
     
     statuses.forEach(status => {
@@ -455,6 +476,7 @@ function calculateStatistics() {
       else if (status === 'Saiu para entrega') badgeClass = 'bg-primary';
       else if (status === 'Entregue') badgeClass = 'bg-success';
       else if (status === 'Cancelado') badgeClass = 'bg-danger';
+      else if (status === 'Reembolsado') badgeClass = 'bg-dark';
       
       statusDistEl.innerHTML += `
         <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent px-0 py-2">
@@ -464,6 +486,132 @@ function calculateStatistics() {
       `;
     });
   }
+}
+
+// Products Tab
+async function renderProductsTab() {
+  allProductsAdmin = await getProducts();
+  const tbody = document.getElementById('products-admin-tbody');
+  if (!tbody) return;
+
+  if (allProductsAdmin.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted">Nenhum produto cadastrado.</td></tr>`;
+    return;
+  }
+
+  let rows = '';
+  allProductsAdmin.forEach(prod => {
+    const isAtivo = prod.ativo !== false;
+    rows += `
+      <tr class="${isAtivo ? '' : 'table-secondary'}">
+        <td>
+          <div class="fw-bold ${isAtivo ? '' : 'text-muted'}">${prod.nome}</div>
+          <span class="text-muted small" style="font-size:0.75rem;">${prod.id}</span>
+        </td>
+        <td>${capitalize(prod.categoria)}</td>
+        <td>${formatPreco(prod.preco)}</td>
+        <td class="text-center">
+          ${prod.destaque
+            ? '<span class="badge bg-warning text-dark">Destaque</span>'
+            : '<span class="text-muted small">—</span>'}
+        </td>
+        <td class="text-center">
+          ${isAtivo
+            ? '<span class="badge bg-success">Ativo</span>'
+            : '<span class="badge bg-secondary">Inativo</span>'}
+        </td>
+        <td class="text-center text-nowrap">
+          <button class="btn btn-sm btn-outline-premium py-1 px-3 me-1" onclick="openProductModal('${prod.id}')" style="border-radius:12px;">Editar</button>
+          <button class="btn btn-sm ${isAtivo ? 'btn-outline-danger' : 'btn-outline-success'} py-1 px-3" onclick="toggleProductActive('${prod.id}')" style="border-radius:12px;">
+            ${isAtivo ? 'Desativar' : 'Ativar'}
+          </button>
+        </td>
+      </tr>
+    `;
+  });
+  tbody.innerHTML = rows;
+}
+
+function openProductModal(productId) {
+  const modalLabel = document.getElementById('productModalLabel');
+  document.getElementById('product-form').reset();
+
+  if (productId) {
+    const prod = allProductsAdmin.find(p => p.id === productId);
+    if (!prod) return;
+    modalLabel.innerText = 'Editar Produto';
+    document.getElementById('product-edit-id').value = prod.id;
+    document.getElementById('product-nome').value = prod.nome;
+    document.getElementById('product-categoria').value = prod.categoria;
+    document.getElementById('product-preco').value = prod.preco;
+    document.getElementById('product-imagem').value = prod.imagem || '';
+    document.getElementById('product-descricao').value = prod.descricao;
+    document.getElementById('product-destaque').checked = prod.destaque || false;
+    document.getElementById('product-ativo').checked = prod.ativo !== false;
+  } else {
+    modalLabel.innerText = 'Novo Produto';
+    document.getElementById('product-edit-id').value = '';
+    document.getElementById('product-ativo').checked = true;
+  }
+
+  const modalEl = document.getElementById('productModal');
+  const modalObj = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+  modalObj.show();
+}
+
+function saveProduct() {
+  const nome = document.getElementById('product-nome').value.trim();
+  const categoria = document.getElementById('product-categoria').value;
+  const preco = parseFloat(document.getElementById('product-preco').value);
+  const imagem = document.getElementById('product-imagem').value.trim();
+  const descricao = document.getElementById('product-descricao').value.trim();
+  const destaque = document.getElementById('product-destaque').checked;
+  const ativo = document.getElementById('product-ativo').checked;
+  const editId = document.getElementById('product-edit-id').value;
+
+  if (!nome || !descricao || isNaN(preco) || preco < 0) {
+    showToast('Preencha nome, descrição e preço antes de salvar.');
+    return;
+  }
+
+  const products = JSON.parse(localStorage.getItem('floricultura_produtos') || '[]');
+
+  if (editId) {
+    const index = products.findIndex(p => p.id === editId);
+    if (index > -1) {
+      products[index] = { ...products[index], nome, categoria, preco, imagem, descricao, destaque, ativo };
+    }
+  } else {
+    const newId = 'p' + Date.now();
+    products.push({ id: newId, nome, categoria, preco, imagem, descricao, destaque, ativo });
+  }
+
+  localStorage.setItem('floricultura_produtos', JSON.stringify(products));
+
+  const modalEl = document.getElementById('productModal');
+  const modalObj = bootstrap.Modal.getInstance(modalEl);
+  if (modalObj) modalObj.hide();
+
+  showToast(editId ? `"${nome}" atualizado com sucesso!` : `"${nome}" cadastrado com sucesso!`);
+  renderProductsTab();
+}
+
+function toggleProductActive(productId) {
+  const products = JSON.parse(localStorage.getItem('floricultura_produtos') || '[]');
+  const index = products.findIndex(p => p.id === productId);
+  if (index === -1) return;
+
+  products[index].ativo = products[index].ativo === false;
+  localStorage.setItem('floricultura_produtos', JSON.stringify(products));
+
+  const status = products[index].ativo ? 'ativado' : 'desativado';
+  showToast(`"${products[index].nome}" ${status}.`);
+  renderProductsTab();
+}
+
+function capitalize(word) {
+  if (!word) return '';
+  return word.charAt(0).toUpperCase() + word.slice(1);
 }
 
 // Print comanda formatting helper

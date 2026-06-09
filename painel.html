@@ -45,6 +45,11 @@
           📊 Faturamento & Estatísticas
         </button>
       </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link rounded-pill px-4" id="produtos-tab" data-bs-toggle="pill" data-bs-target="#produtos-pane" type="button" role="tab" aria-controls="produtos-pane" aria-selected="false">
+          🌺 Gerenciar Produtos
+        </button>
+      </li>
     </ul>
 
     <!-- Tabs Panes Container -->
@@ -66,6 +71,7 @@
                 <option value="Saiu para entrega">Saiu para Entrega</option>
                 <option value="Entregue">Entregue</option>
                 <option value="Cancelado">Cancelado</option>
+                <option value="Reembolsado">Reembolsado</option>
               </select>
             </div>
             <div class="col-md-5">
@@ -174,9 +180,101 @@
           </div>
         </div>
       </div>
-      
+
+      <!-- TAB 4: Products Pane -->
+      <div class="tab-pane fade" id="produtos-pane" role="tabpanel" aria-labelledby="produtos-tab">
+        <div class="card border-0 shadow-sm p-4 admin-card" style="border-radius: 20px; background-color: var(--glass-bg);">
+          <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+            <div>
+              <h2 class="h5 mb-1 text-dark">Catálogo de Produtos</h2>
+              <p class="text-muted small mb-0">Cadastre, edite e ative ou desative produtos visíveis no site.</p>
+            </div>
+            <button class="btn btn-premium btn-sm rounded-pill py-2 px-4" onclick="openProductModal(null)">
+              + Novo Produto
+            </button>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-middle table-hover" id="products-admin-table" style="font-size:0.9rem;">
+              <thead class="table-light">
+                <tr>
+                  <th scope="col">Nome / ID</th>
+                  <th scope="col">Categoria</th>
+                  <th scope="col">Preço</th>
+                  <th scope="col" class="text-center">Destaque</th>
+                  <th scope="col" class="text-center">Status</th>
+                  <th scope="col" class="text-center">Ações</th>
+                </tr>
+              </thead>
+              <tbody id="products-admin-tbody">
+                <!-- Rendered dynamically by js/painel.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
     </div>
   </main>
+
+  <!-- PRODUCT ADD/EDIT MODAL -->
+  <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content" style="border-radius:24px; border:none; background-color:var(--champagne);">
+        <div class="modal-header border-bottom-0 pb-0">
+          <h3 class="modal-title h5 text-dark" id="productModalLabel">Produto</h3>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="product-form">
+            <input type="hidden" id="product-edit-id">
+            <div class="row g-3">
+              <div class="col-sm-8">
+                <label class="form-label small fw-bold">Nome do Produto *</label>
+                <input type="text" id="product-nome" class="form-control" placeholder="Ex: Buquê de Rosas Vermelhas" style="border-radius:10px;">
+              </div>
+              <div class="col-sm-4">
+                <label class="form-label small fw-bold">Categoria *</label>
+                <select id="product-categoria" class="form-select" style="border-radius:10px;">
+                  <option value="buques">Buquês</option>
+                  <option value="arranjos">Arranjos</option>
+                  <option value="orquideas">Orquídeas</option>
+                  <option value="cestas">Cestas</option>
+                </select>
+              </div>
+              <div class="col-sm-4">
+                <label class="form-label small fw-bold">Preço (R$) *</label>
+                <input type="number" id="product-preco" class="form-control" step="0.01" min="0" placeholder="0.00" style="border-radius:10px;">
+              </div>
+              <div class="col-sm-8">
+                <label class="form-label small fw-bold">Caminho da Imagem</label>
+                <input type="text" id="product-imagem" class="form-control" placeholder="assets/images/produtos/nome.jpg" style="border-radius:10px;">
+              </div>
+              <div class="col-12">
+                <label class="form-label small fw-bold">Descrição *</label>
+                <textarea id="product-descricao" class="form-control" rows="2" placeholder="Descrição curta exibida no catálogo..." style="border-radius:10px;"></textarea>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-check form-switch pt-2">
+                  <input class="form-check-input" type="checkbox" role="switch" id="product-destaque">
+                  <label class="form-check-label fw-bold small" for="product-destaque">Exibir na seção de Destaques</label>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-check form-switch pt-2">
+                  <input class="form-check-input" type="checkbox" role="switch" id="product-ativo" checked>
+                  <label class="form-check-label fw-bold small" for="product-ativo">Produto ativo (visível no catálogo)</label>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer border-top-0 pt-0 justify-content-between">
+          <button type="button" class="btn btn-outline-premium" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-premium px-4" onclick="saveProduct()">Salvar Produto</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- COMANDA PREVIEW MODAL -->
   <div class="modal fade" id="comandaModal" tabindex="-1" aria-labelledby="comandaModalLabel" aria-hidden="true">
