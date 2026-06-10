@@ -46,7 +46,9 @@
           
           <!-- Studio Visual Canvas -->
           <div class="visual-canvas" id="canvas-container">
-            <!-- Dynamic flower elements will spawn here -->
+            <!-- Stems layer (behind vase) -->
+            <div class="bouquet-stems-container" id="stems-render-zone"></div>
+            <!-- Flower heads layer (above vase) -->
             <div class="bouquet-flowers-container" id="flowers-render-zone"></div>
             
             <!-- Base Container -->
@@ -70,18 +72,14 @@
         <div class="wizard-steps">
           <div class="wizard-step active" id="step-nav-1">
             <div class="step-bubble">1</div>
-            <div class="step-label">Estilo</div>
+            <div class="step-label">Base</div>
           </div>
           <div class="wizard-step" id="step-nav-2">
             <div class="step-bubble">2</div>
-            <div class="step-label">Base</div>
+            <div class="step-label">Flores</div>
           </div>
           <div class="wizard-step" id="step-nav-3">
             <div class="step-bubble">3</div>
-            <div class="step-label">Flores</div>
-          </div>
-          <div class="wizard-step" id="step-nav-4">
-            <div class="step-bubble">4</div>
             <div class="step-label">Revisão</div>
           </div>
         </div>
@@ -98,46 +96,9 @@
 
         <div class="card border-0 shadow-sm p-4" style="border-radius: 24px; background-color: var(--glass-bg);">
           
-          <!-- STEP 1: Choose Style -->
+          <!-- STEP 1: Choose Recipient Base -->
           <div class="wizard-pane active" id="pane-1">
-            <h3 class="h4 mb-2">Etapa 1: Qual o estilo do seu presente?</h3>
-            <p class="text-muted small mb-4">Escolha a estrutura geral do arranjo que deseja montar.</p>
-            
-            <div class="row g-3">
-              <div class="col-sm-6">
-                <div class="selectable-card text-center p-4 h-100" data-style-option="Buquê">
-                  <span class="fs-1 d-block mb-2">💐</span>
-                  <h4 class="h6 mb-1">Buquê Tradicional</h4>
-                  <p class="text-muted small mb-0">Ramos floridos dispostos à mão com laço decorativo.</p>
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="selectable-card text-center p-4 h-100" data-style-option="Vaso">
-                  <span class="fs-1 d-block mb-2">🏺</span>
-                  <h4 class="h6 mb-1">Arranjo em Vaso</h4>
-                  <p class="text-muted small mb-0">Flores dispostas artisticamente em vaso de vidro refinado.</p>
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="selectable-card text-center p-4 h-100" data-style-option="Cesta">
-                  <span class="fs-1 d-block mb-2">🧺</span>
-                  <h4 class="h6 mb-1">Cesta Decorada</h4>
-                  <p class="text-muted small mb-0">Flores frescas acomodadas em uma cesta de vime campestre.</p>
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="selectable-card text-center p-4 h-100" data-style-option="Arranjo">
-                  <span class="fs-1 d-block mb-2">🌿</span>
-                  <h4 class="h6 mb-1">Arranjo de Mesa</h4>
-                  <p class="text-muted small mb-0">Composição baixa estruturada em espuma floral e folhagens.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- STEP 2: Choose Recipient Base -->
-          <div class="wizard-pane" id="pane-2">
-            <h3 class="h4 mb-2">Etapa 2: Escolha o recipiente ou embalagem</h3>
+            <h3 class="h4 mb-2">Etapa 1: Escolha o recipiente ou embalagem</h3>
             <p class="text-muted small mb-4">Cada opção possui uma limitação física de hastes e tamanho de flor suportado.</p>
             
             <div class="row g-3" id="bases-options-container">
@@ -145,11 +106,11 @@
             </div>
           </div>
           
-          <!-- STEP 3: Choose Flowers -->
-          <div class="wizard-pane" id="pane-3">
+          <!-- STEP 2: Choose Flowers -->
+          <div class="wizard-pane" id="pane-2">
             <div class="d-flex justify-content-between align-items-start mb-2">
               <div>
-                <h3 class="h4 mb-1">Etapa 3: Selecione as flores</h3>
+                <h3 class="h4 mb-1">Etapa 2: Selecione as flores</h3>
                 <p class="text-muted small mb-0">Adicione hastes de flores e configure a quantidade de cada espécie.</p>
               </div>
               <span class="badge bg-secondary p-2" id="stem-count-indicator">0 / 0 hastes</span>
@@ -161,21 +122,17 @@
             </div>
           </div>
           
-          <!-- STEP 4: Review & Checkout Add to Cart -->
-          <div class="wizard-pane" id="pane-4">
-            <h3 class="h4 mb-2">Etapa 4: Revise o seu Buquê Personalizado</h3>
+          <!-- STEP 3: Review & Checkout Add to Cart -->
+          <div class="wizard-pane" id="pane-3">
+            <h3 class="h4 mb-2">Etapa 3: Revise o seu Buquê Personalizado</h3>
             <p class="text-muted small mb-4">Confira toda a composição antes de avançar para o carrinho.</p>
             
             <div class="bg-white p-4 rounded-3 border mb-4">
               <h4 class="h5 mb-3 text-dark border-bottom pb-2">Composição do Pedido</h4>
               
-              <!-- Style & Base summary -->
+              <!-- Base summary -->
               <div class="row mb-3">
-                <div class="col-6">
-                  <span class="small text-muted d-block">Estilo</span>
-                  <strong id="review-style-text">--</strong>
-                </div>
-                <div class="col-6">
+                <div class="col-12">
                   <span class="small text-muted d-block">Base / Embalagem</span>
                   <strong id="review-base-text">--</strong>
                 </div>

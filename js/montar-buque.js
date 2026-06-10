@@ -5,10 +5,8 @@ let dbComplementos = [];
 
 // Selected configuration state
 const configurador = {
-  estilo: '',
-  base: null, // selected base object
-  flores: {}, // { [florId]: quantidade }
-  complementos: {}, // { [complementoId]: quantidade }
+  base: null,
+  flores: {},
   precoTotal: 0
 };
 
@@ -35,17 +33,6 @@ function initWizard() {
   const btnPrev = document.getElementById('btn-wizard-prev');
   const btnNext = document.getElementById('btn-wizard-next');
 
-  // Step 1 Click selections
-  const styleCards = document.querySelectorAll('[data-style-option]');
-  styleCards.forEach(card => {
-    card.addEventListener('click', () => {
-      styleCards.forEach(c => c.classList.remove('selected'));
-      card.classList.add('selected');
-      configurador.estilo = card.getAttribute('data-style-option');
-      updateVisualizer();
-    });
-  });
-
   btnPrev.addEventListener('click', () => {
     if (activeStep > 1) {
       goToStep(activeStep - 1);
@@ -54,7 +41,7 @@ function initWizard() {
 
   btnNext.addEventListener('click', () => {
     if (validateCurrentStep()) {
-      if (activeStep < 4) {
+      if (activeStep < 3) {
         goToStep(activeStep + 1);
       } else {
         addCustomBouquetToCart();
@@ -83,12 +70,11 @@ function goToStep(stepNumber) {
   
   // Update buttons
   document.getElementById('btn-wizard-prev').disabled = activeStep === 1;
-  document.getElementById('btn-wizard-next').innerText = activeStep === 4 ? 'Adicionar ao Carrinho 🛒' : 'Avançar ➔';
-  
-  // Clear any existing error alert when switching steps
+  document.getElementById('btn-wizard-next').innerText = activeStep === 3 ? 'Adicionar ao Carrinho 🛒' : 'Avançar ➔';
+
   hideCompatibilityAlert();
-  
-  if (activeStep === 4) {
+
+  if (activeStep === 3) {
     renderReviewSummary();
   }
 }
@@ -96,16 +82,11 @@ function goToStep(stepNumber) {
 // Check step validity before moving forward
 function validateCurrentStep() {
   if (activeStep === 1) {
-    if (!configurador.estilo) {
-      showCompatibilityAlert('Por favor, selecione um estilo geral para começar (Buquê, Vaso, Cesta ou Arranjo).');
-      return false;
-    }
-  } else if (activeStep === 2) {
     if (!configurador.base) {
       showCompatibilityAlert('Por favor, escolha uma base ou embalagem para o seu arranjo.');
       return false;
     }
-  } else if (activeStep === 3) {
+  } else if (activeStep === 2) {
     const totalStems = getActiveStemsCount();
     if (totalStems === 0) {
       showCompatibilityAlert('Adicione pelo menos 1 flor para compor seu arranjo.');
@@ -391,7 +372,7 @@ function updateVisualizer() {
       baseZone.innerHTML = `
         <div class="position-relative d-inline-block">
           <img src="${configurador.base.imagem}" onerror="this.src='https://images.unsplash.com/photo-1596436889106-be35e843f974?auto=format&fit=crop&w=200&q=80'" class="img-fluid" style="max-height: 190px; border-radius: 12px; filter: drop-shadow(0px 10px 10px rgba(0,0,0,0.1));">
-          <span class="position-absolute top-0 start-50 translate-middle badge bg-dark opacity-75">${configurador.base.nome}</span>
+
         </div>
       `;
     } else {
@@ -399,47 +380,80 @@ function updateVisualizer() {
     }
   }
 
-  // 4. Render SVG Flowers growing
+  // 4. Render flowers emerging from vase
+  const stemsZone  = document.getElementById('stems-render-zone');
   const renderZone = document.getElementById('flowers-render-zone');
-  if (renderZone) {
-    renderZone.innerHTML = '';
-    
-    // Draw stems fan-shaped
-    let index = 0;
-    const totalStems = getActiveStemsCount();
-    
-    if (totalStems > 0) {
-      for (const florId in configurador.flores) {
-        const flor = dbFlores.find(f => f.id === florId);
-        const qty = configurador.flores[florId];
-        
-        for (let q = 0; q < qty; q++) {
-          // Spread flowers across a fan shape
-          const angleRange = 60; // total range of angles in degrees
-          const angleStep = totalStems > 1 ? angleRange / (totalStems - 1) : 0;
-          const rotation = -30 + (index * angleStep) + (Math.random() * 4 - 2); // add minor jitter
-          
-          // Spread horizontally
-          const horizontalStep = totalStems > 1 ? 55 / (totalStems - 1) : 0;
-          const leftPosition = 22 + (index * horizontalStep) + (Math.random() * 2 - 1);
-          
-          const baseSize = flor.tamanho === 'large' ? 130 : flor.tamanho === 'small' ? 90 : 110;
-          const imgSize = totalStems <= 3 ? baseSize : totalStems <= 6 ? Math.round(baseSize * 0.8) : Math.round(baseSize * 0.65);
+  if (!stemsZone || !renderZone) return;
 
-          const svgCode = `<img src="${flor.imagem}" style="width:${imgSize}px;height:${imgSize}px;object-fit:contain;display:block;">`;
-          
-          const flowerElement = document.createElement('div');
-          flowerElement.className = 'flower-stem-visual';
-          flowerElement.style.left = `${leftPosition}%`;
-          flowerElement.style.bottom = `90px`;
-          flowerElement.style.transform = `rotate(${rotation}deg)`;
-          flowerElement.style.zIndex = 5 + index;
-          flowerElement.innerHTML = svgCode;
-          
-          renderZone.appendChild(flowerElement);
-          index++;
+  stemsZone.innerHTML  = '';
+  renderZone.innerHTML = '';
+
+  // Vasos: flores atrás (vaso cobre os caules inferiores)
+  // Embalagens: flores na frente (papel envolve por fora, flores emergem visíveis)
+  renderZone.style.zIndex = configurador.base.tipo === 'Embalagem' ? '15' : '5';
+
+  const totalStems = getActiveStemsCount();
+  if (totalStems === 0) return;
+
+  const canvasW = renderZone.clientWidth || 500;
+  let centerX   = canvasW / 2;
+
+  // Calcula a posição da boca de cada recipiente com base nas dimensões reais renderizadas
+  let VASE_OPEN_Y = configurador.base.aberturaY || 180;
+  const containerImg = baseZone ? baseZone.querySelector('img') : null;
+  if (containerImg) {
+    if (containerImg.complete && containerImg.naturalWidth > 0) {
+      const imgRect             = containerImg.getBoundingClientRect();
+      const canvasRect          = renderZone.getBoundingClientRect();
+      const imgBottomFromCanvas = Math.round(canvasRect.bottom - imgRect.bottom);
+      const imgRenderedHeight   = Math.round(imgRect.height);
+      const imgRenderedWidth    = Math.round(imgRect.width);
+      const imgLeftFromCanvas   = Math.round(imgRect.left - canvasRect.left);
+
+      if (imgRenderedHeight > 20) {
+        // Y: ponto calibrado ou fallback dinâmico
+        if (configurador.base.mouthYPercent) {
+          VASE_OPEN_Y = Math.round(imgBottomFromCanvas + imgRenderedHeight * configurador.base.mouthYPercent);
+        } else {
+          const insertDepth = configurador.base.tipo === 'Embalagem' ? 40 : 30;
+          VASE_OPEN_Y = Math.round(imgBottomFromCanvas + imgRenderedHeight) - insertDepth;
+        }
+
+        // X: ponto calibrado individualmente (apenas quando definido); caso contrário usa o centro do canvas
+        if (configurador.base.mouthXPercent) {
+          centerX = Math.round(imgLeftFromCanvas + imgRenderedWidth * configurador.base.mouthXPercent);
         }
       }
+    } else {
+      containerImg.addEventListener('load', () => updateVisualizer(), { once: true });
+    }
+  }
+
+  let index = 0;
+  for (const florId in configurador.flores) {
+    const flor = dbFlores.find(f => f.id === florId);
+    const qty  = configurador.flores[florId];
+
+    for (let q = 0; q < qty; q++) {
+      const angleRange = 60;
+      const angleStep  = totalStems > 1 ? angleRange / (totalStems - 1) : 0;
+      const rotation   = -30 + (index * angleStep) + (Math.random() * 3 - 1.5);
+
+      const imgSize = flor.tamanho === 'large' ? 140 : flor.tamanho === 'small' ? 95 : 115;
+
+      const flowerEl = document.createElement('div');
+      flowerEl.style.cssText = `
+        position: absolute;
+        left: ${centerX - imgSize / 2}px;
+        bottom: ${VASE_OPEN_Y}px;
+        width: ${imgSize}px;
+        transform: rotate(${rotation}deg);
+        transform-origin: bottom center;
+      `;
+      flowerEl.innerHTML = `<img src="${flor.imagem}" style="width:100%;height:auto;display:block;object-fit:contain;">`;
+      renderZone.appendChild(flowerEl);
+
+      index++;
     }
   }
 }
@@ -492,10 +506,7 @@ function darkenColor(hex) {
   return hex;
 }
 
-// Step 5 Summary Rendering
 function renderReviewSummary() {
-  // Style and Base
-  document.getElementById('review-style-text').innerText = configurador.estilo;
   document.getElementById('review-base-text').innerText = configurador.base ? `${configurador.base.nome} (+${formatPreco(configurador.base.preco)})` : '--';
   
   // Flowers list
@@ -542,13 +553,12 @@ function addCustomBouquetToCart() {
   
   const customItem = {
     id: `custom_${Date.now()}`,
-    nome: `Buquê Personalizado (${configurador.estilo})`,
+    nome: `Buquê Personalizado`,
     preco: parseFloat(configurador.precoTotal),
     imagem: configurador.base.imagem, // Use base image
     quantidade: 1,
     isCustom: true,
     composicao: {
-      estilo: configurador.estilo,
       base: configurador.base,
       flores: configurador.flores,
       descricaoCurta: details.join(' | ')
@@ -572,9 +582,7 @@ function resetConfigurador() {
   configurador.base = null;
   configurador.flores = {};
   configurador.precoTotal = 0;
-  
-  // Reset visual checks in inputs
-  document.querySelectorAll('[data-style-option]').forEach(c => c.classList.remove('selected'));
+
   document.querySelectorAll('#bases-options-container .selectable-card').forEach(c => c.classList.remove('selected'));
   document.querySelectorAll('#flowers-options-container .selectable-card').forEach(c => {
     c.classList.remove('selected');

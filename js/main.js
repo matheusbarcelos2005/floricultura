@@ -123,7 +123,8 @@ const DEFAULT_VASOS = [
     "preco": 30.00,
     "capacidadeMax": 3,
     "tamanhosPermitidos": ["small", "medium"],
-    "imagem": "assets/images/vasos/vaso_pequeno.jpg"
+    "imagem": "assets/images/vasos/vaso_pequeno.jpg",
+    "aberturaY": 178
   },
   {
     "id": "v2",
@@ -132,7 +133,8 @@ const DEFAULT_VASOS = [
     "preco": 50.00,
     "capacidadeMax": 6,
     "tamanhosPermitidos": ["small", "medium"],
-    "imagem": "assets/images/vasos/vaso_medio.jpg"
+    "imagem": "assets/images/vasos/vaso_medio.jpg",
+    "aberturaY": 178
   },
   {
     "id": "v3",
@@ -141,7 +143,8 @@ const DEFAULT_VASOS = [
     "preco": 80.00,
     "capacidadeMax": 9,
     "tamanhosPermitidos": ["small", "medium", "large"],
-    "imagem": "assets/images/vasos/vaso_grande.jpg"
+    "imagem": "assets/images/vasos/vaso_grande.jpg",
+    "aberturaY": 178
   },
   {
     "id": "v4",
@@ -150,7 +153,9 @@ const DEFAULT_VASOS = [
     "preco": 15.00,
     "capacidadeMax": 12,
     "tamanhosPermitidos": ["small", "medium"],
-    "imagem": "assets/images/vasos/kraft.jpg"
+    "imagem": "assets/images/vasos/kraft.jpg",
+    "aberturaY": 210,
+    "mouthYPercent": 0.547
   },
   {
     "id": "v5",
@@ -159,16 +164,10 @@ const DEFAULT_VASOS = [
     "preco": 25.00,
     "capacidadeMax": 20,
     "tamanhosPermitidos": ["small", "medium", "large"],
-    "imagem": "assets/images/vasos/premium.jpg"
-  },
-  {
-    "id": "v6",
-    "nome": "Cesta de Vime Trançada",
-    "tipo": "Cesta",
-    "preco": 45.00,
-    "capacidadeMax": 18,
-    "tamanhosPermitidos": ["small", "medium", "large"],
-    "imagem": "assets/images/vasos/cesta_vime.jpg"
+    "imagem": "assets/images/vasos/premium.jpg",
+    "aberturaY": 210,
+    "mouthYPercent": 0.488,
+    "mouthXPercent": 0.539
   }
 ];
 
