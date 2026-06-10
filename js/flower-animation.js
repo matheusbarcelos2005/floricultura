@@ -8,49 +8,41 @@
     return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   }
 
-  // Replicates the mouth position calculation from updateVisualizer()
-  // so the animation starts exactly at the vase opening.
+  // Reads the mouth position directly from the rendered flower elements in the DOM.
+  // These elements are placed by updateVisualizer() with style.bottom = VASE_OPEN_Y,
+  // so they are already at exactly the right position — no need to replicate the math.
   function getMouthPosition(canvas) {
     const container  = document.getElementById('canvas-container');
     const renderZone = document.getElementById('flowers-render-zone');
-    const baseZone   = document.getElementById('base-render-zone');
-    if (!container || !renderZone || !baseZone) return null;
+    if (!container || !renderZone) return null;
 
     const containerRect = container.getBoundingClientRect();
     canvas.width  = Math.round(containerRect.width);
     canvas.height = Math.round(containerRect.height);
 
-    const renderRect = renderZone.getBoundingClientRect();
-    let centerX     = renderRect.width / 2;
-    let VASE_OPEN_Y = (configurador.base && configurador.base.aberturaY) || 180;
-
-    const img = baseZone.querySelector('img');
-    if (img && img.complete && img.naturalWidth > 0) {
-      const imgRect             = img.getBoundingClientRect();
-      const imgBottomFromRender = Math.round(renderRect.bottom - imgRect.bottom);
-      const imgRenderedHeight   = Math.round(imgRect.height);
-      const imgRenderedWidth    = Math.round(imgRect.width);
-      const imgLeftFromRender   = Math.round(imgRect.left - renderRect.left);
-
-      if (imgRenderedHeight > 20) {
-        if (configurador.base && configurador.base.mouthYPercent) {
-          VASE_OPEN_Y = Math.round(imgBottomFromRender + imgRenderedHeight * configurador.base.mouthYPercent);
-        } else {
-          const depth = configurador.base && configurador.base.tipo === 'Embalagem' ? 40 : 30;
-          VASE_OPEN_Y = Math.round(imgBottomFromRender + imgRenderedHeight - depth);
-        }
-        if (configurador.base && configurador.base.mouthXPercent) {
-          centerX = Math.round(imgLeftFromRender + imgRenderedWidth * configurador.base.mouthXPercent);
-        }
-      }
-    }
-
-    // Convert from render-zone-bottom-relative to canvas-top-left-relative
+    const renderRect   = renderZone.getBoundingClientRect();
     const rx = renderRect.left - containerRect.left;
     const ry = renderRect.top  - containerRect.top;
+
+    // Read VASE_OPEN_Y and centerX straight from the first rendered flower div.
+    // style.bottom is set as "${VASE_OPEN_Y}px" and style.left as "${centerX - imgSize/2}px".
+    const flowerDivs = renderZone.querySelectorAll(':scope > div');
+    if (flowerDivs.length > 0) {
+      const el         = flowerDivs[0];
+      const vasoOpenY  = parseInt(el.style.bottom) || 0;
+      const elLeft     = parseInt(el.style.left)   || 0;
+      const elWidth    = parseInt(el.style.width)  || 0;
+
+      return {
+        x: rx + elLeft + elWidth / 2,
+        y: ry + renderRect.height - vasoOpenY
+      };
+    }
+
+    // Fallback when no flowers are rendered yet
     return {
-      x: rx + centerX,
-      y: ry + renderRect.height - VASE_OPEN_Y
+      x: rx + renderRect.width / 2,
+      y: ry + renderRect.height - ((configurador.base && configurador.base.aberturaY) || 180)
     };
   }
 
