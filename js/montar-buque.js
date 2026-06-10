@@ -213,10 +213,6 @@ function adjustFlowerQuantity(florId, change) {
   document.getElementById(`qty-text-${florId}`).innerText = newQty;
 
   updateVisualizer();
-
-  if (change > 0 && newQty > 0 && typeof triggerFlowerAnimation === 'function') {
-    triggerFlowerAnimation(florObj);
-  }
 }
 
 function renderComplementosOptions() {
@@ -459,22 +455,25 @@ function updateVisualizer() {
     const qty  = configurador.flores[florId];
 
     for (let q = 0; q < qty; q++) {
-      const angleRange = 60;
+      const angleRange = Math.min(60, 24 + totalStems * 7);
       const angleStep  = totalStems > 1 ? angleRange / (totalStems - 1) : 0;
-      const rotation   = -30 + (index * angleStep) + (Math.random() * 3 - 1.5);
+      const rotation   = totalStems > 1 ? -angleRange / 2 + (index * angleStep) : -10;
+      const naturalVariation = ((index % 3) - 1) * 2;
 
-      const imgSize = flor.tamanho === 'large' ? 140 : flor.tamanho === 'small' ? 95 : 115;
+      const imgSize = flor.tamanho === 'large' ? 155 : flor.tamanho === 'small' ? 110 : 130;
+      const insertDepth = configurador.base.tipo === 'Embalagem' ? 18 : 28;
 
       const flowerEl = document.createElement('div');
+      flowerEl.className = 'bouquet-flower-sprout';
       flowerEl.style.cssText = `
         position: absolute;
         left: ${centerX - imgSize / 2}px;
-        bottom: ${VASE_OPEN_Y}px;
+        bottom: ${VASE_OPEN_Y - insertDepth}px;
         width: ${imgSize}px;
-        transform: rotate(${rotation}deg);
-        transform-origin: bottom center;
+        transform: rotate(${rotation + naturalVariation}deg);
+        transform-origin: 50% calc(100% - ${insertDepth}px);
       `;
-      flowerEl.innerHTML = `<img src="${flor.imagem}" style="width:100%;height:auto;display:block;object-fit:contain;">`;
+      flowerEl.innerHTML = `<img src="${flor.imagem}" class="bouquet-flower-head" style="width:100%;">`;
       renderZone.appendChild(flowerEl);
 
       index++;

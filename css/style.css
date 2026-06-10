@@ -410,6 +410,18 @@ h1, h2, h3, h4, h5, h6, .display-font {
   pointer-events: none;
 }
 
+.bouquet-flower-sprout {
+  pointer-events: none;
+}
+
+.bouquet-flower-head {
+  height: auto;
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 8px rgba(74, 46, 43, 0.12));
+  animation: flowerRiseFromVase 0.5s ease-out both;
+}
+
 .flower-stem-visual {
   position: absolute;
   bottom: 0;
@@ -559,6 +571,11 @@ h1, h2, h3, h4, h5, h6, .display-font {
 @keyframes growStem {
   0% { transform: scaleY(0); opacity: 0; }
   100% { transform: scaleY(1); opacity: 1; }
+}
+
+@keyframes flowerRiseFromVase {
+  0% { opacity: 0; transform: translateY(26px) scale(0.92); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 /* Print Overrides */
