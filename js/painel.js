@@ -38,6 +38,8 @@ let allProductsAdmin = [];
 document.addEventListener('DOMContentLoaded', async () => {
   if (!(await checkAdminPassword())) return;
 
+  initImagePicker();
+
   // Load databases
   dbFlores = await getFlores();
   dbVasos = await getVasos();
@@ -507,6 +509,41 @@ function calculateStatistics() {
   }
 }
 
+// Image picker for product modal
+function initImagePicker() {
+  const fileInput = document.getElementById('product-imagem-file');
+  if (!fileInput) return;
+  fileInput.addEventListener('change', function () {
+    const file = this.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      setImagePreview(e.target.result);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function setImagePreview(src) {
+  const placeholder = document.getElementById('image-picker-placeholder');
+  const preview = document.getElementById('image-picker-preview');
+  if (!src) { clearImagePreview(); return; }
+  if (placeholder) placeholder.style.display = 'none';
+  if (preview) { preview.src = src; preview.style.display = 'block'; }
+  document.getElementById('product-imagem').value = src;
+}
+
+function clearImagePreview() {
+  const placeholder = document.getElementById('image-picker-placeholder');
+  const preview = document.getElementById('image-picker-preview');
+  if (placeholder) placeholder.style.display = 'block';
+  if (preview) { preview.src = ''; preview.style.display = 'none'; }
+  const hidden = document.getElementById('product-imagem');
+  if (hidden) hidden.value = '';
+  const fileInput = document.getElementById('product-imagem-file');
+  if (fileInput) fileInput.value = '';
+}
+
 // Products Tab
 async function renderProductsTab() {
   allProductsAdmin = await getProducts();
@@ -554,6 +591,7 @@ async function renderProductsTab() {
 function openProductModal(productId) {
   const modalLabel = document.getElementById('productModalLabel');
   document.getElementById('product-form').reset();
+  clearImagePreview();
 
   if (productId) {
     const prod = allProductsAdmin.find(p => p.id === productId);
@@ -563,10 +601,10 @@ function openProductModal(productId) {
     document.getElementById('product-nome').value = prod.nome;
     document.getElementById('product-categoria').value = prod.categoria;
     document.getElementById('product-preco').value = prod.preco;
-    document.getElementById('product-imagem').value = prod.imagem || '';
     document.getElementById('product-descricao').value = prod.descricao;
     document.getElementById('product-destaque').checked = prod.destaque || false;
     document.getElementById('product-ativo').checked = prod.ativo !== false;
+    if (prod.imagem) setImagePreview(prod.imagem);
   } else {
     modalLabel.innerText = 'Novo Produto';
     document.getElementById('product-edit-id').value = '';

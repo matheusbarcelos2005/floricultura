@@ -245,9 +245,23 @@
                 <label class="form-label small fw-bold">Preço (R$) *</label>
                 <input type="number" id="product-preco" class="form-control" step="0.01" min="0" placeholder="0.00" style="border-radius:10px;">
               </div>
-              <div class="col-sm-8">
-                <label class="form-label small fw-bold">Caminho da Imagem</label>
-                <input type="text" id="product-imagem" class="form-control" placeholder="assets/images/produtos/nome.jpg" style="border-radius:10px;">
+              <div class="col-12">
+                <label class="form-label small fw-bold">Imagem do Produto</label>
+                <div id="image-picker-area"
+                  onclick="document.getElementById('product-imagem-file').click()"
+                  style="cursor:pointer; border:2px dashed var(--primary-floral); border-radius:12px; height:150px; display:flex; align-items:center; justify-content:center; overflow:hidden; background:#fdfbf7; transition: border-color 0.2s;">
+                  <div id="image-picker-placeholder" class="text-center text-muted py-2">
+                    <span class="d-block mb-1" style="font-size:2.2rem;">🖼️</span>
+                    <span class="small fw-bold d-block">Adicione sua imagem</span>
+                    <span style="font-size:0.72rem;">Clique para selecionar um arquivo</span>
+                  </div>
+                  <img id="image-picker-preview" src="" alt="Preview"
+                    onerror="clearImagePreview()"
+                    style="display:none; width:100%; height:100%; object-fit:cover;">
+                </div>
+                <input type="file" id="product-imagem-file" accept="image/*" style="display:none;">
+                <input type="hidden" id="product-imagem">
+                <span class="text-muted mt-1 d-inline-block" style="font-size:0.72rem;">Clique na área para trocar a imagem. Formatos: JPG, PNG, WEBP.</span>
               </div>
               <div class="col-12">
                 <label class="form-label small fw-bold">Descrição *</label>
