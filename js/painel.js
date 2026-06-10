@@ -1,13 +1,30 @@
-// Admin password check — runs immediately before any DOM interaction
-(function checkAdminPassword() {
-  if (sessionStorage.getItem('painel_auth') === 'ok') return;
+// Admin password check — compares SHA-256 hash, plain text password never stored in source
+const ADMIN_HASH = 'df25930947dddf6403b02f6cc5828655e75024f17a6f7ba3f56f39ecd7dc43e6';
+
+async function hashString(str) {
+  const buffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function checkAdminPassword() {
+  if (sessionStorage.getItem('painel_auth') === 'ok') return true;
+
   const pwd = prompt('Painel Administrativo – Bella Fioritura\n\nDigite a senha de acesso:');
-  if (pwd === 'floricultura2026') {
-    sessionStorage.setItem('painel_auth', 'ok');
-  } else {
+  if (pwd === null) {
     window.location.replace('index.html');
+    return false;
   }
-})();
+
+  const hashed = await hashString(pwd);
+  if (hashed === ADMIN_HASH) {
+    sessionStorage.setItem('painel_auth', 'ok');
+    return true;
+  }
+
+  alert('Senha incorreta.');
+  window.location.replace('index.html');
+  return false;
+}
 
 // Globals
 let ordersList = [];
@@ -19,6 +36,8 @@ let selectedOrderForComanda = null;
 let allProductsAdmin = [];
 
 document.addEventListener('DOMContentLoaded', async () => {
+  if (!(await checkAdminPassword())) return;
+
   // Load databases
   dbFlores = await getFlores();
   dbVasos = await getVasos();
