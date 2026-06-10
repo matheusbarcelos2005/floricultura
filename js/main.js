@@ -390,9 +390,6 @@ function renderHeaderFooter() {
               <li class="nav-item">
                 <a class="nav-link ${isPage('montar-buque.html') ? 'active' : ''}" href="montar-buque.html">Monte Seu Buquê</a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link ${isPage('painel.html') ? 'active' : ''}" href="painel.html">Painel Floricultura</a>
-              </li>
             </ul>
             <div class="d-flex align-items-center gap-3">
               <a href="carrinho.html" class="btn btn-outline-premium py-2 px-3 d-flex align-items-center gap-2 cart-icon-wrapper">
@@ -430,7 +427,6 @@ function renderHeaderFooter() {
                 <li><a href="index.html" class="text-reset text-decoration-none hover-link">Página Inicial</a></li>
                 <li><a href="produtos.html" class="text-reset text-decoration-none hover-link">Catálogo Completo</a></li>
                 <li><a href="montar-buque.html" class="text-reset text-decoration-none hover-link">Configurador Personalizado</a></li>
-                <li><a href="painel.html" class="text-reset text-decoration-none hover-link">Painel Administrativo</a></li>
               </ul>
             </div>
             <div class="col-md-4">
