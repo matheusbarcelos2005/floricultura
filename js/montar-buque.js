@@ -367,16 +367,36 @@ function updateVisualizer() {
 
   // 3. Render base graphic
   const baseZone = document.getElementById('base-render-zone');
+  const kraftOverlay = document.getElementById('kraft-bottom-overlay');
+
   if (baseZone) {
     if (configurador.base) {
+      const hasSplit = !!configurador.base.imagemParteDecima;
+      const topSrc = hasSplit ? configurador.base.imagemParteDecima : configurador.base.imagem;
+
       baseZone.innerHTML = `
         <div class="position-relative d-inline-block">
-          <img src="${configurador.base.imagem}" onerror="this.src='https://images.unsplash.com/photo-1596436889106-be35e843f974?auto=format&fit=crop&w=200&q=80'" class="img-fluid" style="max-height: 190px; border-radius: 12px; filter: drop-shadow(0px 10px 10px rgba(0,0,0,0.1));">
-
+          <img src="${topSrc}" onerror="this.src='https://images.unsplash.com/photo-1596436889106-be35e843f974?auto=format&fit=crop&w=200&q=80'" class="img-fluid" style="max-height: 190px;${!hasSplit ? ' border-radius: 12px;' : ''} filter: drop-shadow(0px 10px 10px rgba(0,0,0,0.1));">
         </div>
       `;
+
+      if (kraftOverlay) {
+        if (hasSplit && configurador.base.imagemParteBaixo) {
+          const bottomPx = configurador.base.overlayBottomOffset !== undefined ? configurador.base.overlayBottomOffset : 24;
+          kraftOverlay.style.bottom = bottomPx + 'px';
+          kraftOverlay.style.display = 'block';
+          kraftOverlay.innerHTML = `<img src="${configurador.base.imagemParteBaixo}" class="img-fluid" style="max-height: 190px; filter: drop-shadow(0px 10px 10px rgba(0,0,0,0.15));">`;
+        } else {
+          kraftOverlay.style.display = 'none';
+          kraftOverlay.innerHTML = '';
+        }
+      }
     } else {
       baseZone.innerHTML = `<span class="text-muted d-block py-4">Selecione uma base na Etapa 2</span>`;
+      if (kraftOverlay) {
+        kraftOverlay.style.display = 'none';
+        kraftOverlay.innerHTML = '';
+      }
     }
   }
 

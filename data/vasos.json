@@ -48,8 +48,11 @@
     "capacidadeMax": 20,
     "tamanhosPermitidos": ["small", "medium", "large"],
     "imagem": "assets/images/vasos/premium.jpg",
+    "imagemParteDecima": "assets/images/vasos/parte_de_cima_premium.jpg",
+    "imagemParteBaixo": "assets/images/vasos/parte_de_baixo_premium.jpg.png",
     "aberturaY": 210,
-    "mouthYPercent": 0.488,
-    "mouthXPercent": 0.539
+    "mouthYPercent": 0.75,
+    "mouthXPercent": 0.5,
+    "overlayBottomOffset": 13
   }
 ]
