@@ -121,7 +121,7 @@ const DEFAULT_VASOS = [
     "nome": "Vaso de Vidro Pequeno",
     "tipo": "Vaso",
     "preco": 30.00,
-    "capacidadeMax": 8,
+    "capacidadeMax": 3,
     "tamanhosPermitidos": ["small", "medium"],
     "imagem": "assets/images/vasos/vaso_pequeno.jpg"
   },
@@ -130,7 +130,7 @@ const DEFAULT_VASOS = [
     "nome": "Vaso de Vidro Médio",
     "tipo": "Vaso",
     "preco": 50.00,
-    "capacidadeMax": 15,
+    "capacidadeMax": 6,
     "tamanhosPermitidos": ["small", "medium"],
     "imagem": "assets/images/vasos/vaso_medio.jpg"
   },
@@ -139,7 +139,7 @@ const DEFAULT_VASOS = [
     "nome": "Vaso de Vidro Grande",
     "tipo": "Vaso",
     "preco": 80.00,
-    "capacidadeMax": 25,
+    "capacidadeMax": 9,
     "tamanhosPermitidos": ["small", "medium", "large"],
     "imagem": "assets/images/vasos/vaso_grande.jpg"
   },
@@ -208,15 +208,9 @@ function initDatabase() {
   if (!localStorage.getItem('floricultura_produtos')) {
     localStorage.setItem('floricultura_produtos', JSON.stringify(DEFAULT_PRODUCTS));
   }
-  if (!localStorage.getItem('floricultura_flores')) {
-    localStorage.setItem('floricultura_flores', JSON.stringify(DEFAULT_FLORES));
-  }
-  if (!localStorage.getItem('floricultura_vasos')) {
-    localStorage.setItem('floricultura_vasos', JSON.stringify(DEFAULT_VASOS));
-  }
-  if (!localStorage.getItem('floricultura_complementos')) {
-    localStorage.setItem('floricultura_complementos', JSON.stringify(DEFAULT_COMPLEMENTOS));
-  }
+  localStorage.setItem('floricultura_flores', JSON.stringify(DEFAULT_FLORES));
+  localStorage.setItem('floricultura_vasos', JSON.stringify(DEFAULT_VASOS));
+  localStorage.setItem('floricultura_complementos', JSON.stringify(DEFAULT_COMPLEMENTOS));
   if (!localStorage.getItem('floricultura_pedidos')) {
     localStorage.setItem('floricultura_pedidos', JSON.stringify([]));
   }

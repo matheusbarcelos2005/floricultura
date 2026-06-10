@@ -18,15 +18,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Load databases
   dbFlores = await getFlores();
   dbVasos = await getVasos();
-  dbComplementos = await getComplementos();
 
   // Initialize Wizard elements
   initWizard();
-  
+
   // Render static options
   renderBasesOptions();
   renderFloresOptions();
-  renderComplementosOptions();
   
   // Initial updates
   updateVisualizer();
@@ -56,10 +54,9 @@ function initWizard() {
 
   btnNext.addEventListener('click', () => {
     if (validateCurrentStep()) {
-      if (activeStep < 5) {
+      if (activeStep < 4) {
         goToStep(activeStep + 1);
       } else {
-        // Step 5 completes construction: Add to Cart
         addCustomBouquetToCart();
       }
     }
@@ -86,12 +83,12 @@ function goToStep(stepNumber) {
   
   // Update buttons
   document.getElementById('btn-wizard-prev').disabled = activeStep === 1;
-  document.getElementById('btn-wizard-next').innerText = activeStep === 5 ? 'Adicionar ao Carrinho 🛒' : 'Avançar ➔';
+  document.getElementById('btn-wizard-next').innerText = activeStep === 4 ? 'Adicionar ao Carrinho 🛒' : 'Avançar ➔';
   
   // Clear any existing error alert when switching steps
   hideCompatibilityAlert();
   
-  if (activeStep === 5) {
+  if (activeStep === 4) {
     renderReviewSummary();
   }
 }
@@ -175,7 +172,7 @@ function renderFloresOptions() {
         <div class="selectable-card p-3 d-flex flex-column justify-content-between" id="flower-card-${flor.id}">
           <div class="d-flex gap-3 align-items-start">
             <div style="width: 60px; height: 60px; border-radius: 8px; overflow:hidden;" class="flex-shrink-0">
-              <img src="${flor.imagem}" onerror="this.src='https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=100&q=80'" class="w-100 h-100" style="object-fit:cover;">
+              <img src="${flor.imagem}" onerror="this.src='https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=100&q=80'" style="width:100%;height:100%;object-fit:cover;display:block;">
             </div>
             <div>
               <h4 class="h6 mb-1">${flor.nome}</h4>
@@ -368,13 +365,7 @@ function updateVisualizer() {
     flowersPrice += (flor.precoHaste * configurador.flores[fId]);
   }
   
-  let complementsPrice = 0;
-  for (const cId in configurador.complementos) {
-    const comp = dbComplementos.find(c => c.id === cId);
-    complementsPrice += (comp.preco * configurador.complementos[cId]);
-  }
-  
-  configurador.precoTotal = basePrice + flowersPrice + complementsPrice;
+  configurador.precoTotal = basePrice + flowersPrice;
 
   // 2. Update text badges
   document.getElementById('visualizer-total-price').innerText = formatPreco(configurador.precoTotal);
@@ -429,25 +420,13 @@ function updateVisualizer() {
           const rotation = -30 + (index * angleStep) + (Math.random() * 4 - 2); // add minor jitter
           
           // Spread horizontally
-          const horizontalStep = totalStems > 1 ? 60 / (totalStems - 1) : 0;
-          const leftPosition = 20 + (index * horizontalStep) + (Math.random() * 2 - 1);
+          const horizontalStep = totalStems > 1 ? 55 / (totalStems - 1) : 0;
+          const leftPosition = 22 + (index * horizontalStep) + (Math.random() * 2 - 1);
           
-          // Vary stem heights slightly to look natural
-          const height = 150 + (Math.random() * 40 - 20) + (flor.tamanho === 'large' ? 30 : flor.tamanho === 'small' ? -20 : 0);
-          
-          // Draw a customized SVG stem and flower head
-          const svgCode = `
-            <svg width="40" height="${height}" viewBox="0 0 40 ${height}" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <!-- Stem -->
-              <path d="M20 ${height} C 20 ${height/2}, 18 ${height/3}, 20 20" stroke="#4a6b51" stroke-width="3" stroke-linecap="round"/>
-              <!-- Leaves -->
-              <path d="M20 ${height/2 + 20} Q 10 ${height/2 + 10}, 8 ${height/2} Q 18 ${height/2 + 15}, 20 ${height/2 + 20}" fill="#4a6b51"/>
-              <path d="M20 ${height/2 - 10} Q 30 ${height/2 - 20}, 32 ${height/2 - 30} Q 22 ${height/2 - 15}, 20 ${height/2 - 10}" fill="#4a6b51"/>
-              
-              <!-- Flower Head -->
-              ${getFlowerHeadSVG(flor.cor, flor.tamanho)}
-            </svg>
-          `;
+          const baseSize = flor.tamanho === 'large' ? 130 : flor.tamanho === 'small' ? 90 : 110;
+          const imgSize = totalStems <= 3 ? baseSize : totalStems <= 6 ? Math.round(baseSize * 0.8) : Math.round(baseSize * 0.65);
+
+          const svgCode = `<img src="${flor.imagem}" style="width:${imgSize}px;height:${imgSize}px;object-fit:contain;display:block;">`;
           
           const flowerElement = document.createElement('div');
           flowerElement.className = 'flower-stem-visual';
@@ -541,28 +520,6 @@ function renderReviewSummary() {
     flowersList.innerHTML = `<li class="list-group-item text-muted px-0 py-2">Nenhuma flor selecionada.</li>`;
   }
   
-  // Complements list
-  const complementsList = document.getElementById('review-complements-list');
-  complementsList.innerHTML = '';
-  
-  let totalCompsCount = 0;
-  for (const cId in configurador.complementos) {
-    const comp = dbComplementos.find(c => c.id === cId);
-    const qty = configurador.complementos[cId];
-    totalCompsCount += qty;
-    
-    complementsList.innerHTML += `
-      <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
-        <span>🎁 ${qty}x ${comp.nome}</span>
-        <span class="text-muted">${formatPreco(comp.preco * qty)}</span>
-      </li>
-    `;
-  }
-  
-  if (totalCompsCount === 0) {
-    complementsList.innerHTML = `<li class="list-group-item text-muted px-0 py-2 text-white-50">Nenhum mimo ou chocolate adicionado.</li>`;
-  }
-  
   // Total summary price
   document.getElementById('review-total-price').innerText = formatPreco(configurador.precoTotal);
 }
@@ -583,16 +540,6 @@ function addCustomBouquetToCart() {
   }
   details.push(`Flores: ${flowersText.join(', ')}`);
   
-  // Complements list
-  const compText = [];
-  for (const cId in configurador.complementos) {
-    const comp = dbComplementos.find(c => c.id === cId);
-    compText.push(`${configurador.complementos[cId]}x ${comp.nome}`);
-  }
-  if (compText.length > 0) {
-    details.push(`Mimos: ${compText.join(', ')}`);
-  }
-  
   const customItem = {
     id: `custom_${Date.now()}`,
     nome: `Buquê Personalizado (${configurador.estilo})`,
@@ -604,7 +551,6 @@ function addCustomBouquetToCart() {
       estilo: configurador.estilo,
       base: configurador.base,
       flores: configurador.flores,
-      complementos: configurador.complementos,
       descricaoCurta: details.join(' | ')
     }
   };
@@ -625,7 +571,6 @@ function resetConfigurador() {
   configurador.estilo = '';
   configurador.base = null;
   configurador.flores = {};
-  configurador.complementos = {};
   configurador.precoTotal = 0;
   
   // Reset visual checks in inputs
@@ -636,13 +581,6 @@ function resetConfigurador() {
   });
   dbFlores.forEach(f => {
     const qtyText = document.getElementById(`qty-text-${f.id}`);
-    if (qtyText) qtyText.innerText = 0;
-  });
-  document.querySelectorAll('#complements-options-container .selectable-card').forEach(c => {
-    c.classList.remove('selected');
-  });
-  dbComplementos.forEach(c => {
-    const qtyText = document.getElementById(`qty-comp-text-${c.id}`);
     if (qtyText) qtyText.innerText = 0;
   });
 }
