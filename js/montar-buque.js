@@ -152,8 +152,8 @@ function renderFloresOptions() {
       <div class="col-sm-6">
         <div class="selectable-card p-3 d-flex flex-column justify-content-between" id="flower-card-${flor.id}">
           <div class="d-flex gap-3 align-items-start">
-            <div style="width: 60px; height: 60px; border-radius: 8px; overflow:hidden;" class="flex-shrink-0">
-              <img src="${flor.imagem}" onerror="this.src='https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=100&q=80'" style="width:100%;height:100%;object-fit:cover;display:block;">
+            <div class="flower-option-thumb flex-shrink-0">
+              <img src="${flor.imagem}" onerror="this.src='https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=100&q=80'">
             </div>
             <div>
               <h4 class="h6 mb-1">${flor.nome}</h4>
@@ -368,24 +368,47 @@ function updateVisualizer() {
   // 3. Render base graphic
   const baseZone = document.getElementById('base-render-zone');
   const kraftOverlay = document.getElementById('kraft-bottom-overlay');
+  const layerMaxHeight = configurador.base && configurador.base.layerMaxHeight ? configurador.base.layerMaxHeight : 190;
+  const layerWidth = configurador.base && configurador.base.layerWidth ? configurador.base.layerWidth : 190;
+  const layerBottomOffset = configurador.base && configurador.base.layerBottomOffset !== undefined ? configurador.base.layerBottomOffset : 24;
+  const backLayerOffsetY = configurador.base && configurador.base.backLayerOffsetY !== undefined ? configurador.base.backLayerOffsetY : 0;
+  const backLayerScale = configurador.base && configurador.base.backLayerScale ? configurador.base.backLayerScale : 1;
+  const frontLayerOffsetY = configurador.base && configurador.base.frontLayerOffsetY !== undefined ? configurador.base.frontLayerOffsetY : 0;
+  const frontLayerScale = configurador.base && configurador.base.frontLayerScale ? configurador.base.frontLayerScale : 1;
 
   if (baseZone) {
     if (configurador.base) {
-      const hasSplit = !!configurador.base.imagemParteDecima;
-      const topSrc = hasSplit ? configurador.base.imagemParteDecima : configurador.base.imagem;
+      const backLayerSrc = configurador.base.imagemParteTras || configurador.base.imagemParteDecima;
+      const frontLayerSrc = configurador.base.imagemParteFrente || configurador.base.imagemParteBaixo;
+      const hasSplit = !!(backLayerSrc && frontLayerSrc);
+      const baseSrc = backLayerSrc || configurador.base.imagem;
 
-      baseZone.innerHTML = `
-        <div class="position-relative d-inline-block">
-          <img src="${topSrc}" onerror="this.src='https://images.unsplash.com/photo-1596436889106-be35e843f974?auto=format&fit=crop&w=200&q=80'" class="img-fluid" style="max-height: 190px;${!hasSplit ? ' border-radius: 12px;' : ''} filter: drop-shadow(0px 10px 10px rgba(0,0,0,0.1));">
-        </div>
-      `;
+      baseZone.style.bottom = layerBottomOffset + 'px';
+      baseZone.style.marginBottom = '0';
+      if (hasSplit) {
+        baseZone.innerHTML = `
+          <div class="bouquet-base-layer-frame" style="width:${layerWidth}px;height:${layerWidth}px;">
+            <img src="${baseSrc}" onerror="this.src='https://images.unsplash.com/photo-1596436889106-be35e843f974?auto=format&fit=crop&w=200&q=80'" class="bouquet-base-layer-img bouquet-base-back-layer" style="transform: translateY(${backLayerOffsetY}px) scale(${backLayerScale}); filter: drop-shadow(0px 10px 10px rgba(0,0,0,0.1));">
+          </div>
+        `;
+      } else {
+        baseZone.innerHTML = `
+          <div class="position-relative d-inline-block">
+            <img src="${baseSrc}" onerror="this.src='https://images.unsplash.com/photo-1596436889106-be35e843f974?auto=format&fit=crop&w=200&q=80'" class="img-fluid bouquet-base-layer-img" style="max-height: ${layerMaxHeight}px; border-radius: 12px; filter: drop-shadow(0px 10px 10px rgba(0,0,0,0.1));">
+          </div>
+        `;
+      }
 
       if (kraftOverlay) {
-        if (hasSplit && configurador.base.imagemParteBaixo) {
-          const bottomPx = configurador.base.overlayBottomOffset !== undefined ? configurador.base.overlayBottomOffset : 24;
+        if (hasSplit) {
+          const bottomPx = configurador.base.overlayBottomOffset !== undefined ? configurador.base.overlayBottomOffset : layerBottomOffset;
           kraftOverlay.style.bottom = bottomPx + 'px';
           kraftOverlay.style.display = 'block';
-          kraftOverlay.innerHTML = `<img src="${configurador.base.imagemParteBaixo}" class="img-fluid" style="max-height: 190px; filter: drop-shadow(0px 10px 10px rgba(0,0,0,0.15));">`;
+          kraftOverlay.innerHTML = `
+            <div class="bouquet-base-layer-frame" style="width:${layerWidth}px;height:${layerWidth}px;">
+              <img src="${frontLayerSrc}" class="bouquet-base-layer-img bouquet-base-front-layer" style="transform: translateY(${frontLayerOffsetY}px) scale(${frontLayerScale}); filter: drop-shadow(0px 10px 10px rgba(0,0,0,0.15));">
+            </div>
+          `;
         } else {
           kraftOverlay.style.display = 'none';
           kraftOverlay.innerHTML = '';
@@ -410,7 +433,8 @@ function updateVisualizer() {
 
   // Vasos: flores atrás (vaso cobre os caules inferiores)
   // Embalagens: flores na frente (papel envolve por fora, flores emergem visíveis)
-  renderZone.style.zIndex = configurador.base.tipo === 'Embalagem' ? '15' : '5';
+  const hasFrontLayer = !!(configurador.base.imagemParteFrente || configurador.base.imagemParteBaixo);
+  renderZone.style.zIndex = configurador.base.tipo === 'Embalagem' || hasFrontLayer ? '15' : '5';
 
   const totalStems = getActiveStemsCount();
   if (totalStems === 0) return;
@@ -420,10 +444,11 @@ function updateVisualizer() {
 
   // Calcula a posição da boca de cada recipiente com base nas dimensões reais renderizadas
   let VASE_OPEN_Y = configurador.base.aberturaY || 180;
+  const containerGraphic = baseZone ? (baseZone.querySelector('.bouquet-base-layer-frame') || baseZone.querySelector('img')) : null;
   const containerImg = baseZone ? baseZone.querySelector('img') : null;
-  if (containerImg) {
-    if (containerImg.complete && containerImg.naturalWidth > 0) {
-      const imgRect             = containerImg.getBoundingClientRect();
+  if (containerGraphic) {
+    if (!containerImg || containerImg.complete && containerImg.naturalWidth > 0) {
+      const imgRect             = containerGraphic.getBoundingClientRect();
       const canvasRect          = renderZone.getBoundingClientRect();
       const imgBottomFromCanvas = Math.round(canvasRect.bottom - imgRect.bottom);
       const imgRenderedHeight   = Math.round(imgRect.height);
@@ -462,13 +487,14 @@ function updateVisualizer() {
 
       const imgSize = flor.tamanho === 'large' ? 155 : flor.tamanho === 'small' ? 110 : 130;
       const insertDepth = configurador.base.tipo === 'Embalagem' ? 18 : 28;
+      const flowerOffsetY = configurador.base.flowerOffsetY || 0;
 
       const flowerEl = document.createElement('div');
       flowerEl.className = 'bouquet-flower-sprout';
       flowerEl.style.cssText = `
         position: absolute;
         left: ${centerX - imgSize / 2}px;
-        bottom: ${VASE_OPEN_Y - insertDepth}px;
+        bottom: ${VASE_OPEN_Y - insertDepth - flowerOffsetY}px;
         width: ${imgSize}px;
         transform: rotate(${rotation + naturalVariation}deg);
         transform-origin: 50% calc(100% - ${insertDepth}px);

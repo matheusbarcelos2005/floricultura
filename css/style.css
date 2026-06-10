@@ -410,6 +410,26 @@ h1, h2, h3, h4, h5, h6, .display-font {
   pointer-events: none;
 }
 
+.bouquet-base-layer-frame {
+  position: relative;
+  display: inline-block;
+  vertical-align: bottom;
+}
+
+.bouquet-base-layer-frame .bouquet-base-layer-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+}
+
+.bouquet-base-layer-img {
+  width: auto;
+  object-fit: contain;
+  object-position: center bottom;
+}
+
 .bouquet-flower-sprout {
   pointer-events: none;
 }
@@ -477,6 +497,22 @@ h1, h2, h3, h4, h5, h6, .display-font {
 .selectable-card.disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.flower-option-thumb {
+  width: 62px;
+  height: 72px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.flower-option-thumb img {
+  width: 100%;
+  height: 130%;
+  object-fit: cover;
+  object-position: center 12%;
+  display: block;
 }
 
 .qty-control {

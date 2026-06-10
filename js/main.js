@@ -154,8 +154,18 @@ const DEFAULT_VASOS = [
     "capacidadeMax": 12,
     "tamanhosPermitidos": ["small", "medium"],
     "imagem": "assets/images/vasos/kraft.jpg",
+    "imagemParteTras": "assets/images/vasos/parte_de_cima_kraft.jpg",
+    "imagemParteFrente": "assets/images/vasos/parte_de_baixo_kraft.jpg.png",
     "aberturaY": 210,
-    "mouthYPercent": 0.547
+    "mouthYPercent": 0.75,
+    "mouthXPercent": 0.5,
+    "layerWidth": 205,
+    "layerBottomOffset": 24,
+    "backLayerOffsetY": -52,
+    "backLayerScale": 1.25,
+    "frontLayerOffsetY": -9,
+    "frontLayerScale": 1.06,
+    "flowerOffsetY": 14
   },
   {
     "id": "v5",
@@ -165,9 +175,18 @@ const DEFAULT_VASOS = [
     "capacidadeMax": 20,
     "tamanhosPermitidos": ["small", "medium", "large"],
     "imagem": "assets/images/vasos/premium.jpg",
+    "imagemParteTras": "assets/images/vasos/parte_de_cima_premium.jpg",
+    "imagemParteFrente": "assets/images/vasos/parte_de_baixo_premium.jpg.png",
     "aberturaY": 210,
-    "mouthYPercent": 0.488,
-    "mouthXPercent": 0.539
+    "mouthYPercent": 0.75,
+    "mouthXPercent": 0.5,
+    "layerWidth": 205,
+    "layerBottomOffset": 24,
+    "backLayerOffsetY": -56,
+    "backLayerScale": 1,
+    "frontLayerOffsetY": -5,
+    "frontLayerScale": 1.025,
+    "flowerOffsetY": 14
   }
 ];
 
