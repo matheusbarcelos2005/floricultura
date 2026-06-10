@@ -2,6 +2,13 @@
   "permissions": {
     "allow": [
       "Read(//a/Programa��o/_Sites prontos/**)"
+    ],
+    "additionalDirectories": [
+      "a:\\Programa��o\\_Sites prontos",
+      "a:\\Programação\\_Sites prontos\\floricultura-novo\\data",
+      "a:\\Programação\\_Sites prontos\\floricultura-novo\\css",
+      "a:\\Programação\\_Sites prontos\\floricultura-novo\\js",
+      "a:\\Programação\\_Sites prontos\\floricultura-novo"
     ]
   }
 }
