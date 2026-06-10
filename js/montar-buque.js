@@ -211,8 +211,12 @@ function adjustFlowerQuantity(florId, change) {
   }
   
   document.getElementById(`qty-text-${florId}`).innerText = newQty;
-  
+
   updateVisualizer();
+
+  if (change > 0 && newQty > 0 && typeof triggerFlowerAnimation === 'function') {
+    triggerFlowerAnimation(florObj);
+  }
 }
 
 function renderComplementosOptions() {
