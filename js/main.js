@@ -243,6 +243,10 @@ function initDatabase() {
 
 // Data loaders with CORS fallback
 async function loadData(key, filePath, defaultData) {
+  // localStorage is the source of truth — only seed from JSON on first load
+  const local = localStorage.getItem(`floricultura_${key}`);
+  if (local) return JSON.parse(local);
+
   try {
     const response = await fetch(filePath);
     if (response.ok) {
@@ -251,11 +255,10 @@ async function loadData(key, filePath, defaultData) {
       return data;
     }
   } catch (error) {
-    console.warn(`Could not fetch ${filePath} (likely running on local file:// protocol). Using localStorage or fallback defaults.`);
+    console.warn(`Could not fetch ${filePath}. Using fallback defaults.`);
   }
-  
-  const local = localStorage.getItem(`floricultura_${key}`);
-  return local ? JSON.parse(local) : defaultData;
+
+  return defaultData;
 }
 
 // Global getters
