@@ -404,11 +404,31 @@ function updateVisualizer() {
           const bottomPx = configurador.base.overlayBottomOffset !== undefined ? configurador.base.overlayBottomOffset : layerBottomOffset;
           kraftOverlay.style.bottom = bottomPx + 'px';
           kraftOverlay.style.display = 'block';
-          kraftOverlay.innerHTML = `
-            <div class="bouquet-base-layer-frame" style="width:${layerWidth}px;height:${layerWidth}px;">
-              <img src="${frontLayerSrc}" class="bouquet-base-layer-img bouquet-base-front-layer" style="transform: translateY(${frontLayerOffsetY}px) scale(${frontLayerScale}); filter: drop-shadow(0px 10px 10px rgba(0,0,0,0.15));">
-            </div>
-          `;
+
+          const frontLayerWidthPercent = configurador.base.frontLayerWidthPercent || null;
+
+          if (frontLayerWidthPercent !== null) {
+            // Vaso mode: render the rim overlay with natural proportions, centered at the neck
+            kraftOverlay.innerHTML = `
+              <div class="bouquet-base-layer-frame" style="width:${layerWidth}px;height:${layerWidth}px;">
+                <img src="${frontLayerSrc}" class="bouquet-base-front-layer" style="
+                  position:absolute;
+                  width:${frontLayerWidthPercent}%;
+                  height:auto;
+                  left:50%;
+                  top:${frontLayerOffsetY}px;
+                  transform:translateX(-50%);
+                  filter:drop-shadow(0px 3px 6px rgba(0,0,0,0.2));
+                ">
+              </div>
+            `;
+          } else {
+            kraftOverlay.innerHTML = `
+              <div class="bouquet-base-layer-frame" style="width:${layerWidth}px;height:${layerWidth}px;">
+                <img src="${frontLayerSrc}" class="bouquet-base-layer-img bouquet-base-front-layer" style="transform: translateY(${frontLayerOffsetY}px) scale(${frontLayerScale}); filter: drop-shadow(0px 10px 10px rgba(0,0,0,0.15));">
+              </div>
+            `;
+          }
         } else {
           kraftOverlay.style.display = 'none';
           kraftOverlay.innerHTML = '';

@@ -7,7 +7,18 @@
     "capacidadeMax": 3,
     "tamanhosPermitidos": ["small", "medium"],
     "imagem": "assets/images/vasos/vaso_pequeno.jpg",
-    "aberturaY": 178
+    "imagemParteTras": "assets/images/vasos/parte_de_baixo_vasoP.png",
+    "imagemParteFrente": "assets/images/vasos/parte_de_cima_vasoP.jpg.png",
+    "mouthYPercent": 0.82,
+    "mouthXPercent": 0.5,
+    "layerWidth": 260,
+    "layerBottomOffset": 24,
+    "backLayerOffsetY": 0,
+    "backLayerScale": 1,
+    "frontLayerOffsetY": 14,
+    "frontLayerScale": 1,
+    "frontLayerWidthPercent": 30,
+    "flowerOffsetY": 0
   },
   {
     "id": "v2",

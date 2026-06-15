@@ -124,7 +124,18 @@ const DEFAULT_VASOS = [
     "capacidadeMax": 3,
     "tamanhosPermitidos": ["small", "medium"],
     "imagem": "assets/images/vasos/vaso_pequeno.jpg",
-    "aberturaY": 178
+    "imagemParteTras": "assets/images/vasos/parte_de_baixo_vasoP.png",
+    "imagemParteFrente": "assets/images/vasos/parte_de_cima_vasoP.jpg.png",
+    "mouthYPercent": 0.82,
+    "mouthXPercent": 0.5,
+    "layerWidth": 210,
+    "layerBottomOffset": 24,
+    "backLayerOffsetY": 0,
+    "backLayerScale": 1,
+    "frontLayerOffsetY": -10,
+    "frontLayerScale": 1,
+    "frontLayerWidthPercent": 68,
+    "flowerOffsetY": 0
   },
   {
     "id": "v2",
