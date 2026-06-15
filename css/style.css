@@ -111,13 +111,23 @@ h1, h2, h3, h4, h5, h6, .display-font {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(253, 251, 247, 0.4);
+  background: rgba(253, 251, 247, 0.15);
   z-index: 1;
 }
 
 .hero-content {
   position: relative;
   z-index: 2;
+}
+
+.hero-text-panel {
+  background: rgba(253, 251, 247, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 20px;
+  border: 1px solid rgba(211, 162, 151, 0.25);
+  box-shadow: 0 8px 32px rgba(74, 46, 43, 0.08);
+  padding: 2.5rem !important;
 }
 
 .hero-title {
