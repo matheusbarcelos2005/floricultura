@@ -30,7 +30,6 @@ async function checkAdminPassword() {
 let ordersList = [];
 let dbFlores = [];
 let dbVasos = [];
-let dbComplementos = [];
 let stockLevels = {};
 let selectedOrderForComanda = null;
 let allProductsAdmin = [];
@@ -43,8 +42,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Load databases
   dbFlores = await getFlores();
   dbVasos = await getVasos();
-  dbComplementos = await getComplementos();
-  
   // Refresh and Render Tab 1 (Orders)
   refreshOrdersData();
   
@@ -231,7 +228,6 @@ function openComandaModal(orderId) {
         
         itemsHTML += `
           <strong>${item.quantidade}x ${item.nome}</strong><br>
-          - Estilo: ${comp.estilo}<br>
           - Recipiente: ${comp.base.nome}<br>
         `;
         

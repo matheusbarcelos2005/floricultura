@@ -373,19 +373,6 @@ h1, h2, h3, h4, h5, h6, .display-font {
   display: block;
 }
 
-/* Bouquet Builder Visualizer Grid */
-.builder-split {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-}
-
-@media (max-width: 992px) {
-  .builder-split {
-    grid-template-columns: 1fr;
-  }
-}
-
 .visualizer-container {
   background: radial-gradient(circle, #ffffff 0%, #f4eae6 100%);
   border: 1px solid rgba(211, 162, 151, 0.2);
@@ -401,14 +388,6 @@ h1, h2, h3, h4, h5, h6, .display-font {
   width: 100%;
   height: 100%;
   position: relative;
-}
-
-.bouquet-base-visual {
-  position: absolute;
-  bottom: 20px;
-  max-height: 220px;
-  z-index: 10;
-  transition: var(--transition-smooth);
 }
 
 #base-render-zone,
@@ -466,19 +445,6 @@ h1, h2, h3, h4, h5, h6, .display-font {
   object-fit: contain;
   filter: drop-shadow(0 8px 8px rgba(74, 46, 43, 0.12));
   animation: flowerRiseFromVase 0.5s ease-out both;
-}
-
-.flower-stem-visual {
-  position: absolute;
-  bottom: 0;
-  transform-origin: bottom center;
-  transition: var(--transition-smooth);
-  animation: growStem 0.5s ease-out forwards;
-}
-
-.flower-stem-visual svg {
-  display: block;
-  margin: 0 auto;
 }
 
 /* Selection Cards (Vases/Flowers/etc) */
@@ -600,13 +566,6 @@ h1, h2, h3, h4, h5, h6, .display-font {
   font-size: 0.8rem;
   font-weight: 600;
 }
-
-.badge-pendente { background-color: #ffe8cc; color: #d9480f; }
-.badge-pago { background-color: #d3f9d8; color: #2b8a3e; }
-.badge-preparacao { background-color: #e5dbff; color: #6741d9; }
-.badge-entrega { background-color: #e3fafc; color: #0b7285; }
-.badge-entregue { background-color: #ebfbee; color: #087f5b; }
-.badge-cancelado { background-color: #ffe3e3; color: #c92a2a; }
 
 /* Comanda Printable Styles */
 .comanda-printable {

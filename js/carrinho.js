@@ -73,7 +73,6 @@ function renderCart() {
     if (item.isCustom && item.composicao) {
       compositionDetailsHTML = `
         <div class="mt-2 text-muted small bg-light p-2.5 rounded" style="font-size: 0.8rem; border-left: 3px solid var(--primary-floral);">
-          <div class="mb-1"><strong>Estilo:</strong> ${item.composicao.estilo}</div>
           <div class="mb-1"><strong>Base:</strong> ${item.composicao.base.nome}</div>
           <div><strong>Composição:</strong> ${item.composicao.descricaoCurta.split(' | ').slice(1).join(' | ')}</div>
         </div>

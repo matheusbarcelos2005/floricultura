@@ -325,7 +325,6 @@ function printComandaOrder(order) {
       
       itemsText += `
         <strong>${item.quantidade}x ${item.nome}</strong><br>
-        - Estilo: ${comp.estilo}<br>
         - Recipiente: ${comp.base.nome}<br>
       `;
       
