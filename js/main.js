@@ -126,15 +126,16 @@ const DEFAULT_VASOS = [
     "imagem": "assets/images/vasos/vaso_pequeno.jpg",
     "imagemParteTras": "assets/images/vasos/parte_de_cima_vasoP.jpg.png",
     "imagemParteFrente": "assets/images/vasos/parte_de_baixo_vasoP.png",
-    "mouthYPercent": 0.63,
+    "mouthYPercent": 0.82,
     "mouthXPercent": 0.5,
-    "layerWidth": 190,
-    "layerBottomOffset": 24,
-    "backLayerOffsetY": -30,
+    "layerWidth": 200,
+    "layerBottomOffset": 80,
+    "backLayerOffsetY": -85,
     "backLayerScale": 0.7,
     "frontLayerOffsetY": 0,
     "frontLayerScale": 1,
-    "flowerOffsetY": 0
+    "flowerOffsetY": 0,
+    "vaseOffsetX": 0
   },
   {
     "id": "v2",
@@ -148,13 +149,14 @@ const DEFAULT_VASOS = [
     "imagemParteFrente": "assets/images/vasos/parte_de_baixo_vasoM.png",
     "mouthYPercent": 0.85,
     "mouthXPercent": 0.5,
-    "layerWidth": 210,
-    "layerBottomOffset": 24,
-    "backLayerOffsetY": -20,
+    "layerWidth": 230,
+    "layerBottomOffset": 60,
+    "backLayerOffsetY": -55,
     "backLayerScale": 0.9,
     "frontLayerOffsetY": 0,
     "frontLayerScale": 1,
-    "flowerOffsetY": 0
+    "flowerOffsetY": 0,
+    "vaseOffsetX": 0
   },
   {
     "id": "v3",
@@ -168,7 +170,8 @@ const DEFAULT_VASOS = [
     "mouthXPercent": 0.45,
     "layerMaxHeight": 250,
     "layerBottomOffset": 24,
-    "flowerOffsetY": 0
+    "flowerOffsetY": 0,
+    "vaseOffsetX": 0
   },
   {
     "id": "v4",
@@ -410,14 +413,13 @@ function renderHeaderFooter() {
   if (headerElem) {
     headerElem.innerHTML = `
       <nav class="navbar navbar-expand-lg navbar-custom fixed-top py-3">
-        <div class="container">
+        <div class="container position-relative">
           <a class="navbar-brand" href="index.html">
-            <span style="color: var(--sage-green);">✿</span> Bella Fioritura
+            <img src="assets/images/Logo/logo.png" alt="Bella Fioritura" style="height: 110px; width: auto;">
           </a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
-          
           <div class="collapse navbar-collapse" id="navbarContent">
             <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
               <li class="nav-item">
@@ -444,6 +446,16 @@ function renderHeaderFooter() {
       </nav>
       <div style="height: 85px;"></div>
     `;
+
+    // Scroll: navbar compacta com logo centralizado
+    const navEl = document.querySelector('.navbar-custom');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 60) {
+        navEl.classList.add('navbar-scrolled');
+      } else {
+        navEl.classList.remove('navbar-scrolled');
+      }
+    });
   }
 
   // Render Footer
