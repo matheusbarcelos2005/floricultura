@@ -128,7 +128,7 @@ const DEFAULT_VASOS = [
     "imagemParteFrente": "assets/images/vasos/parte_de_baixo_vasoP.png",
     "mouthYPercent": 0.63,
     "mouthXPercent": 0.5,
-    "layerWidth": 210,
+    "layerWidth": 190,
     "layerBottomOffset": 24,
     "backLayerOffsetY": -30,
     "backLayerScale": 0.7,
@@ -144,7 +144,17 @@ const DEFAULT_VASOS = [
     "capacidadeMax": 6,
     "tamanhosPermitidos": ["small", "medium"],
     "imagem": "assets/images/vasos/vaso_medio.jpg",
-    "aberturaY": 178
+    "imagemParteTras": "assets/images/vasos/parte_de_cima_vasoM.png",
+    "imagemParteFrente": "assets/images/vasos/parte_de_baixo_vasoM.png",
+    "mouthYPercent": 0.85,
+    "mouthXPercent": 0.44,
+    "layerWidth": 210,
+    "layerBottomOffset": 24,
+    "backLayerOffsetY": -20,
+    "backLayerScale": 0.7,
+    "frontLayerOffsetY": 0,
+    "frontLayerScale": 1,
+    "flowerOffsetY": 20
   },
   {
     "id": "v3",
