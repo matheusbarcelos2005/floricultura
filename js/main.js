@@ -487,7 +487,7 @@ function renderHeaderFooter() {
               <p class="mb-0 text-white-50 small">&copy; 2026 Bella Fioritura. Todos os direitos reservados. Projeto Acadêmico / Protótipo.</p>
             </div>
             <div class="col-md-6 text-center text-md-end mt-3 mt-md-0">
-              <span class="text-white-50 small">Desenvolvido com ☕ e ♥</span>
+              <span class="text-white-50 small">Desenvolvido por Matheus Barcelos Alves - matheusbarcelosbr@gmail.com</span>
             </div>
           </div>
         </div>
