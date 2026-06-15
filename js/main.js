@@ -130,7 +130,7 @@ const DEFAULT_VASOS = [
     "mouthXPercent": 0.5,
     "layerWidth": 210,
     "layerBottomOffset": 24,
-    "backLayerOffsetY": -53,
+    "backLayerOffsetY": -30,
     "backLayerScale": 0.7,
     "frontLayerOffsetY": 0,
     "frontLayerScale": 1,
