@@ -33,6 +33,7 @@ let dbVasos = [];
 let stockLevels = {};
 let selectedOrderForComanda = null;
 let allProductsAdmin = [];
+let allCategoriesAdmin = [];
 
 document.addEventListener('DOMContentLoaded', async () => {
   if (!(await checkAdminPassword())) return;
@@ -543,6 +544,10 @@ function clearImagePreview() {
 // Products Tab
 async function renderProductsTab() {
   allProductsAdmin = await getProducts();
+  allCategoriesAdmin = await getCategories();
+  renderCategoriesAdminList();
+  populateProductCategorySelect();
+
   const tbody = document.getElementById('products-admin-tbody');
   if (!tbody) return;
 
@@ -554,13 +559,14 @@ async function renderProductsTab() {
   let rows = '';
   allProductsAdmin.forEach(prod => {
     const isAtivo = prod.ativo !== false;
+    const category = getAdminCategory(prod.categoria);
     rows += `
       <tr class="${isAtivo ? '' : 'table-secondary'}">
         <td>
           <div class="fw-bold ${isAtivo ? '' : 'text-muted'}">${prod.nome}</div>
           <span class="text-muted small" style="font-size:0.75rem;">${prod.id}</span>
         </td>
-        <td>${capitalize(prod.categoria)}</td>
+        <td>${category ? category.nome : capitalize(prod.categoria)}</td>
         <td>${formatPreco(prod.preco)}</td>
         <td class="text-center">
           ${prod.destaque
@@ -584,10 +590,157 @@ async function renderProductsTab() {
   tbody.innerHTML = rows;
 }
 
+function renderCategoriesAdminList() {
+  const container = document.getElementById('categories-admin-list');
+  if (!container) return;
+
+  if (allCategoriesAdmin.length === 0) {
+    container.innerHTML = '<div class="col-12 text-muted small">Nenhuma categoria cadastrada.</div>';
+    return;
+  }
+
+  container.innerHTML = '';
+  allCategoriesAdmin.forEach(cat => {
+    const isActive = cat.ativo !== false;
+    const isHome = cat.home !== false;
+    container.innerHTML += `
+      <div class="col-lg-4 col-md-6">
+        <div class="border rounded-3 bg-white p-3 h-100">
+          <div class="d-flex justify-content-between align-items-start gap-2">
+            <div>
+              <div class="fw-bold text-dark">${cat.icone || '✿'} ${cat.nome}</div>
+              <div class="text-muted small">${cat.descricao || 'Sem descrição.'}</div>
+            </div>
+            <span class="badge ${isActive ? 'bg-success' : 'bg-secondary'}">${isActive ? 'Visível' : 'Oculta'}</span>
+          </div>
+          <div class="d-flex flex-wrap gap-2 mt-3">
+            <button type="button" class="btn btn-sm ${isHome ? 'btn-warning' : 'btn-outline-warning'}" onclick="toggleCategoryHome('${cat.id}')" style="border-radius:10px;">
+              ${isHome ? 'Na inicial' : 'Colocar na inicial'}
+            </button>
+            <button type="button" class="btn btn-sm ${isActive ? 'btn-outline-danger' : 'btn-outline-success'}" onclick="toggleCategoryActive('${cat.id}')" style="border-radius:10px;">
+              ${isActive ? 'Ocultar' : 'Mostrar'}
+            </button>
+            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="deleteCategory('${cat.id}')" style="border-radius:10px;">
+              Excluir
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+}
+
+function populateProductCategorySelect(selectedCategory = '') {
+  const select = document.getElementById('product-categoria');
+  if (!select) return;
+
+  select.innerHTML = '<option value="">Selecione uma categoria</option>';
+  allCategoriesAdmin.forEach(cat => {
+    select.innerHTML += `<option value="${cat.id}">${cat.nome}</option>`;
+  });
+
+  if (selectedCategory) {
+    select.value = selectedCategory;
+  }
+}
+
+function getAdminCategory(categoryId) {
+  return allCategoriesAdmin.find(cat => cat.id === categoryId);
+}
+
+function createCategoryId(name) {
+  return name
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '') || `categoria-${Date.now()}`;
+}
+
+function addCategoryFromAdmin() {
+  const nomeInput = document.getElementById('category-nome');
+  const descricaoInput = document.getElementById('category-descricao');
+  const iconeInput = document.getElementById('category-icone');
+
+  const nome = nomeInput.value.trim();
+  const descricao = descricaoInput.value.trim();
+  const icone = iconeInput.value.trim() || '✿';
+
+  if (!nome) {
+    showToast('Informe o nome da categoria antes de adicionar.');
+    return;
+  }
+
+  const categories = JSON.parse(localStorage.getItem('floricultura_categorias') || '[]');
+  let id = createCategoryId(nome);
+  if (categories.some(cat => cat.id === id)) {
+    id = `${id}-${Date.now()}`;
+  }
+
+  categories.push({
+    id,
+    nome,
+    descricao: descricao || 'Seleção especial de produtos para esta ocasião.',
+    icone,
+    ativo: true,
+    home: true
+  });
+
+  saveCategories(categories);
+  nomeInput.value = '';
+  descricaoInput.value = '';
+  iconeInput.value = '';
+  showToast(`Categoria "${nome}" adicionada.`);
+  renderProductsTab();
+}
+
+function toggleCategoryHome(categoryId) {
+  const categories = JSON.parse(localStorage.getItem('floricultura_categorias') || '[]');
+  const category = categories.find(cat => cat.id === categoryId);
+  if (!category) return;
+
+  category.home = category.home === false;
+  saveCategories(categories);
+  showToast(category.home ? `"${category.nome}" aparece na página inicial.` : `"${category.nome}" saiu da página inicial.`);
+  renderProductsTab();
+}
+
+function toggleCategoryActive(categoryId) {
+  const categories = JSON.parse(localStorage.getItem('floricultura_categorias') || '[]');
+  const category = categories.find(cat => cat.id === categoryId);
+  if (!category) return;
+
+  category.ativo = category.ativo === false;
+  saveCategories(categories);
+  showToast(category.ativo ? `"${category.nome}" visível no site.` : `"${category.nome}" ocultada do site.`);
+  renderProductsTab();
+}
+
+function deleteCategory(categoryId) {
+  const products = JSON.parse(localStorage.getItem('floricultura_produtos') || '[]');
+  const hasProducts = products.some(prod => prod.categoria === categoryId);
+  if (hasProducts) {
+    showToast('Não é possível excluir uma categoria que possui produtos. Oculte a categoria ou mova os produtos antes.');
+    return;
+  }
+
+  const categories = JSON.parse(localStorage.getItem('floricultura_categorias') || '[]');
+  const category = categories.find(cat => cat.id === categoryId);
+  if (!category) return;
+
+  if (!confirm(`Excluir a categoria "${category.nome}"?`)) return;
+
+  saveCategories(categories.filter(cat => cat.id !== categoryId));
+  showToast(`Categoria "${category.nome}" excluída.`);
+  renderProductsTab();
+}
+
 function openProductModal(productId) {
   const modalLabel = document.getElementById('productModalLabel');
   document.getElementById('product-form').reset();
   clearImagePreview();
+  populateProductCategorySelect();
 
   if (productId) {
     const prod = allProductsAdmin.find(p => p.id === productId);
@@ -595,7 +748,7 @@ function openProductModal(productId) {
     modalLabel.innerText = 'Editar Produto';
     document.getElementById('product-edit-id').value = prod.id;
     document.getElementById('product-nome').value = prod.nome;
-    document.getElementById('product-categoria').value = prod.categoria;
+    populateProductCategorySelect(prod.categoria);
     document.getElementById('product-preco').value = prod.preco;
     document.getElementById('product-descricao').value = prod.descricao;
     document.getElementById('product-destaque').checked = prod.destaque || false;
@@ -624,6 +777,10 @@ function saveProduct() {
 
   if (!nome || !descricao || isNaN(preco) || preco < 0) {
     showToast('Preencha nome, descrição e preço antes de salvar.');
+    return;
+  }
+  if (!categoria) {
+    showToast('Selecione uma categoria para o produto.');
     return;
   }
 

@@ -1,5 +1,6 @@
 // State variables for Catalog Page
 let allProducts = [];
+let allCategories = [];
 let currentCategory = 'all';
 let currentSearch = '';
 let currentSort = 'default';
@@ -7,6 +8,8 @@ let currentSort = 'default';
 document.addEventListener('DOMContentLoaded', async () => {
   // Load products database
   allProducts = await getProducts();
+  allCategories = await getCategories();
+  renderCatalogCategoryFilters();
   
   // Parse URL query parameter for category (e.g., ?cat=buques)
   const urlParams = new URLSearchParams(window.location.search);
@@ -125,6 +128,27 @@ function setupCatalogEvents() {
   }
 }
 
+function renderCatalogCategoryFilters() {
+  const group = document.getElementById('categories-filter-group');
+  if (!group) return;
+
+  group.innerHTML = `
+    <button type="button" class="btn btn-sm text-start py-2 px-3 rounded-pill filter-btn active" data-category="all" style="font-weight: 600;">
+      ✿ Todas as Categorias
+    </button>
+  `;
+
+  allCategories
+    .filter(cat => cat.ativo !== false)
+    .forEach(cat => {
+      group.innerHTML += `
+        <button type="button" class="btn btn-sm text-start py-2 px-3 rounded-pill filter-btn" data-category="${cat.id}" style="font-weight: 600;">
+          ${cat.icone || '✿'} ${cat.nome}
+        </button>
+      `;
+    });
+}
+
 function filterAndRenderCatalog() {
   const container = document.getElementById('catalog-products-container');
   const countText = document.getElementById('catalog-count-text');
@@ -135,10 +159,12 @@ function filterAndRenderCatalog() {
   // 1. Filtering
   let filtered = allProducts.filter(product => {
     const isAtivo = product.ativo !== false;
+    const category = allCategories.find(cat => cat.id === product.categoria);
+    const categoryIsVisible = category ? category.ativo !== false : true;
     const matchesCategory = currentCategory === 'all' || product.categoria === currentCategory;
     const matchesSearch = product.nome.toLowerCase().includes(currentSearch) ||
                           product.descricao.toLowerCase().includes(currentSearch);
-    return isAtivo && matchesCategory && matchesSearch;
+    return isAtivo && categoryIsVisible && matchesCategory && matchesSearch;
   });
   
   // 2. Sorting
@@ -187,12 +213,12 @@ function filterAndRenderCatalog() {
             <img src="${product.imagem}" onerror="this.src='https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=400&q=80'" alt="${product.nome}" class="product-img">
           </div>
           <div class="product-body">
-            <span class="text-uppercase text-muted fw-bold small" style="font-size:0.75rem;">${capitalize(product.categoria)}</span>
+            <span class="text-uppercase text-muted fw-bold small" style="font-size:0.75rem;">${getCategoryName(product.categoria)}</span>
             <h3 class="product-title h5 mt-1">${product.nome}</h3>
             <p class="product-desc">${product.descricao}</p>
             <div class="product-footer">
               <span class="product-price">${formatPreco(product.preco)}</span>
-              <button class="btn btn-premium btn-sm py-2 px-3" onclick="triggerAddToCart('${product.id}', '${product.nome}', ${product.preco}, '${product.imagem}')">
+              <button class="btn btn-premium btn-sm py-2 px-3" onclick="triggerAddToCart('${product.id}', '${product.nome}', ${product.preco}, '${product.imagem}', '${product.categoria}')">
                 Adicionar
               </button>
             </div>
@@ -203,12 +229,13 @@ function filterAndRenderCatalog() {
   });
 }
 
-function triggerAddToCart(id, nome, preco, imagem) {
+function triggerAddToCart(id, nome, preco, imagem, categoria) {
   const item = {
     id: id,
     nome: nome,
     preco: parseFloat(preco),
     imagem: imagem,
+    categoria: categoria,
     quantidade: 1,
     isCustom: false
   };
@@ -219,4 +246,9 @@ function triggerAddToCart(id, nome, preco, imagem) {
 function capitalize(word) {
   if (!word) return '';
   return word.charAt(0).toUpperCase() + word.slice(1);
+}
+
+function getCategoryName(categoryId) {
+  const category = allCategories.find(cat => cat.id === categoryId);
+  return category ? category.nome : capitalize(categoryId);
 }

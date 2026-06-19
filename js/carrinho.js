@@ -122,7 +122,16 @@ function updateCartItemQuantity(index, change) {
   const cart = getCart();
   if (index >= 0 && index < cart.length) {
     const item = cart[index];
+    const previousQty = item.quantidade;
     item.quantidade = Math.max(1, item.quantidade + change);
+
+    const availability = checkStockAvailability(cart);
+    if (!availability.ok) {
+      item.quantidade = previousQty;
+      showToast('Estoque insuficiente para aumentar a quantidade deste item.');
+      return;
+    }
+
     saveCart(cart);
     renderCart();
   }

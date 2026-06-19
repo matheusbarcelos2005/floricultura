@@ -153,6 +153,13 @@ function setupCheckoutEvents() {
 }
 
 function processOrderSubmission() {
+  const availability = checkStockAvailability(cartItems);
+  if (!availability.ok) {
+    showToast('Alguns itens do carrinho não possuem estoque suficiente. Revise o pedido antes de continuar.');
+    window.location.href = 'carrinho.html';
+    return;
+  }
+
   const nome = document.getElementById('c-nome').value.trim();
   const telefone = document.getElementById('c-telefone').value.trim();
   const email = document.getElementById('c-email').value.trim();
@@ -277,33 +284,7 @@ function confirmPaymentSuccess() {
 }
 
 function updateInventoryStock(itens) {
-  const stock = getEstoque();
-  let stockUpdated = false;
-
-  itens.forEach(item => {
-    // If it's a custom bouquet, subtract base and flower quantities
-    if (item.isCustom && item.composicao) {
-      const comp = item.composicao;
-      
-      // Subtract vase/base
-      if (comp.base && stock[comp.base.id] !== undefined) {
-        stock[comp.base.id] = Math.max(0, stock[comp.base.id] - item.quantidade);
-        stockUpdated = true;
-      }
-      
-      // Subtract flower stems
-      for (const florId in comp.flores) {
-        if (stock[florId] !== undefined) {
-          stock[florId] = Math.max(0, stock[florId] - (comp.flores[florId] * item.quantidade));
-          stockUpdated = true;
-        }
-      }
-    }
-  });
-
-  if (stockUpdated) {
-    saveEstoque(stock);
-  }
+  return reduceStockForItems(itens);
 }
 
 // Generate printable receipts directly from client-side

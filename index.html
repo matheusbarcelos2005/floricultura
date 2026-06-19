@@ -46,47 +46,8 @@
         <p class="text-muted">Explore categorias selecionadas com muito carinho para todas as ocasiões.</p>
       </div>
       
-      <div class="row g-4 justify-content-center">
-        <!-- Buquês -->
-        <div class="col-md-3 col-sm-6">
-          <a href="produtos.html?cat=buques" class="text-decoration-none">
-            <div class="selectable-card text-center p-4 h-100">
-              <span class="fs-1 d-block mb-3">💐</span>
-              <h4 class="h5 mb-2">Buquês</h4>
-              <p class="text-muted small mb-0">Rosas, tulipas, flores campestres e mais.</p>
-            </div>
-          </a>
-        </div>
-        <!-- Arranjos -->
-        <div class="col-md-3 col-sm-6">
-          <a href="produtos.html?cat=arranjos" class="text-decoration-none">
-            <div class="selectable-card text-center p-4 h-100">
-              <span class="fs-1 d-block mb-3">🏺</span>
-              <h4 class="h5 mb-2">Arranjos</h4>
-              <p class="text-muted small mb-0">Composições elegantes montadas em vasos.</p>
-            </div>
-          </a>
-        </div>
-        <!-- Orquídeas -->
-        <div class="col-md-3 col-sm-6">
-          <a href="produtos.html?cat=orquideas" class="text-decoration-none">
-            <div class="selectable-card text-center p-4 h-100">
-              <span class="fs-1 d-block mb-3">🌸</span>
-              <h4 class="h5 mb-2">Orquídeas</h4>
-              <p class="text-muted small mb-0">Beleza exuberante e durabilidade em vasos.</p>
-            </div>
-          </a>
-        </div>
-        <!-- Cestas -->
-        <div class="col-md-3 col-sm-6">
-          <a href="produtos.html?cat=cestas" class="text-decoration-none">
-            <div class="selectable-card text-center p-4 h-100">
-              <span class="fs-1 d-block mb-3">🧺</span>
-              <h4 class="h5 mb-2">Cestas</h4>
-              <p class="text-muted small mb-0">Combinações completas com presentes finos.</p>
-            </div>
-          </a>
-        </div>
+      <div class="row g-4 justify-content-center" id="home-categories-container">
+        <div class="col-12 text-center text-muted small">Carregando coleções...</div>
       </div>
     </div>
   </section>
@@ -119,7 +80,7 @@
     <div class="container py-3">
       <div class="row align-items-center g-5">
         <div class="col-lg-6">
-          <div class="p-3" style="border-radius: 24px; background: linear-gradient(135deg, #fdfbf7 0%, #f4eae6 100%);">
+          <div class="p-3" style="border-radius: 24px; background: linear-gradient(135deg, #fffdf2 0%, #edf9e8 100%);">
             <!-- Simulated bouquet customizer mockup preview -->
             <img src="assets/images/hero/img_menu.jpg" alt="Montar buquê" class="img-fluid rounded-4 shadow-sm">
           </div>
@@ -181,13 +142,21 @@
   <!-- Index Local Logic -->
   <script>
     document.addEventListener('DOMContentLoaded', async () => {
+      renderHomeCategories();
+
       // Load products and filter highlighted ones
       const products = await getProducts();
+      const categories = await getCategories();
       const container = document.getElementById('featured-products-container');
       
       if (container) {
         container.innerHTML = '';
-        const highlights = products.filter(p => p.destaque).slice(0, 4);
+        const visibleCategoryIds = categories
+          .filter(cat => cat.ativo !== false)
+          .map(cat => cat.id);
+        const highlights = products
+          .filter(p => p.destaque && p.ativo !== false && visibleCategoryIds.includes(p.categoria))
+          .slice(0, 4);
         
         if (highlights.length === 0) {
           container.innerHTML = `<div class="col-12 text-center text-muted">Nenhum produto em destaque cadastrado.</div>`;
@@ -207,7 +176,7 @@
                   <p class="product-desc">${prod.descricao}</p>
                   <div class="product-footer">
                     <span class="product-price">${formatPreco(prod.preco)}</span>
-                    <button class="btn btn-premium btn-sm py-2 px-3" onclick="handleAddToCart('${prod.id}', '${prod.nome}', ${prod.preco}, '${prod.imagem}')">
+                    <button class="btn btn-premium btn-sm py-2 px-3" onclick="handleAddToCart('${prod.id}', '${prod.nome}', ${prod.preco}, '${prod.imagem}', '${prod.categoria}')">
                       Adicionar
                     </button>
                   </div>
@@ -219,12 +188,41 @@
       }
     });
 
-    function handleAddToCart(id, nome, preco, imagem) {
+    async function renderHomeCategories() {
+      const container = document.getElementById('home-categories-container');
+      if (!container) return;
+
+      const categories = await getCategories();
+      const visibleCategories = categories.filter(cat => cat.ativo !== false && cat.home !== false);
+      container.innerHTML = '';
+
+      if (visibleCategories.length === 0) {
+        container.innerHTML = '<div class="col-12 text-center text-muted small">Nenhuma coleção em destaque no momento.</div>';
+        return;
+      }
+
+      visibleCategories.forEach(cat => {
+        container.innerHTML += `
+          <div class="col-md-3 col-sm-6">
+            <a href="produtos.html?cat=${cat.id}" class="text-decoration-none">
+              <div class="selectable-card text-center p-4 h-100">
+                <span class="fs-1 d-block mb-3">${cat.icone || '✿'}</span>
+                <h4 class="h5 mb-2">${cat.nome}</h4>
+                <p class="text-muted small mb-0">${cat.descricao || 'Produtos selecionados para ocasiões especiais.'}</p>
+              </div>
+            </a>
+          </div>
+        `;
+      });
+    }
+
+    function handleAddToCart(id, nome, preco, imagem, categoria) {
       const item = {
         id: id,
         nome: nome,
         preco: parseFloat(preco),
         imagem: imagem,
+        categoria: categoria,
         quantidade: 1,
         isCustom: false
       };

@@ -1,6 +1,6 @@
 # Bella Fioritura – Floricultura & Configurador de Buquês Personalizados
 
-Este é o protótipo de e-commerce completo e responsivo desenvolvido para uma floricultura de alto padrão. O sistema gerencia o catálogo de produtos, carrinho de compras, checkout, simulação de webhook de pagamentos e painel administrativo de preparação de comandas.
+Site responsivo de e-commerce desenvolvido para uma floricultura. O sistema gerencia catálogo de produtos, carrinho de compras, checkout, confirmação de pagamento demonstrativa, controle de estoque e painel administrativo de preparação de comandas.
 
 O diferencial principal do projeto é o **Configurador Interativo de Buquês**, que permite ao usuário criar arranjos personalizados escolhendo bases, flores e complementos em tempo real com validação inteligente de regras de compatibilidade física.
 
@@ -50,7 +50,7 @@ floricultura-site/
 │   ├── main.js          # Inicialização do banco simulado, carrinho global e cabeçalho/rodapé
 │   ├── produtos.js      # Lógica de renderização de cards e filtros no catálogo
 │   ├── carrinho.js      # Operações de atualização e cálculo de frete
-│   ├── checkout.js      # Validação do faturamento, webhook simulado e comanda de impressão
+│   ├── checkout.js      # Validação do checkout, confirmação de pagamento e comanda de impressão
 │   ├── montar-buque.js  # Regras de limite de hastes, compatibilidade física e desenho dinâmico de flores
 │   └── painel.js        # Atualização de pedidos em tempo real, monitor de faturamento e controle de estoque
 │
@@ -65,8 +65,8 @@ floricultura-site/
 
 ## 🛠️ Detalhes de Tecnologia e Regras de Negócio
 
-### 1. Banco de Dados Simulado
-Para salvar dados de pedidos, alterações de status e controle de estoque, o JavaScript utiliza o **`localStorage`** do navegador. O banco é inicializado automaticamente no primeiro carregamento do site.
+### 1. Persistência Local
+Para salvar dados de pedidos, alterações de status e controle de estoque, o JavaScript utiliza o **`localStorage`** do navegador. Os dados são inicializados automaticamente no primeiro carregamento do site.
 
 ### 2. Regras de Compatibilidade (Configurador)
 A física do buquê é testada em tempo real no arquivo `js/montar-buque.js`:
@@ -75,9 +75,9 @@ A física do buquê é testada em tempo real no arquivo `js/montar-buque.js`:
 * **Vaso de Vidro Grande / Embalagem Tecido Premium**: Comporta até **25 / 20 hastes** e aceita todas as espécies.
 Se o usuário tenta exceder esses limites, um banner de alerta vermelho detalhado é exibido impedindo a adição de mais itens.
 
-### 3. Simulador de Pagamento & Webhook
+### 3. Pagamento e Confirmação
 No checkout, ao concluir o formulário:
-* **PIX**: Gera um código PIX copSymbol e exibe um QR Code simulado de cobrança. Um timer de 10 segundos simula a confirmação vinda do gateway (webhook), atualizando o pedido para "Pago" em segundo plano.
+* **PIX**: Exibe um QR Code demonstrativo e um código para cópia. Um timer de 10 segundos representa a confirmação automática do pagamento, atualizando o pedido para "Pago" em segundo plano.
 * **Cartão de Crédito**: Exibe uma tela de processamento seguro por 3 segundos, aprovando a transação em seguida.
 O estoque de hastes florais e vasos diminui automaticamente no painel assim que o pagamento é concluído.
 
@@ -89,3 +89,16 @@ No painel e na tela de sucesso do checkout, a equipe pode visualizar a comanda d
 ## ✍️ Manutenção do Projeto
 
 Qualquer desenvolvedor pode estender o catálogo editando os arquivos na pasta `data/` ou acessando os métodos declarados em `js/main.js`. Toda a marcação HTML segue a semântica do padrão HTML5 (tags `header`, `main`, `section`, `aside` e `footer`) e usa classes responsivas nativas do Bootstrap 5.
+
+---
+
+## Entrega Final
+
+Esta versão está pronta para apresentação e uso demonstrativo em navegador, com fluxo completo de compra, montagem de buquê, estoque e painel administrativo.
+
+Para uso comercial em produção, os próximos passos recomendados são:
+
+* conectar o checkout a uma API real de pagamento, como Pix, cartão ou boleto;
+* mover pedidos, estoque e autenticação para um backend com banco de dados;
+* proteger o painel administrativo com login de servidor;
+* configurar domínio, hospedagem HTTPS e políticas de privacidade.

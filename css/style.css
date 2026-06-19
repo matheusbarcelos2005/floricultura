@@ -2,16 +2,16 @@
 
 /* Color Variables */
 :root {
-  --primary-floral: #d3a297;
-  --primary-dark: #4a2e2b;
-  --sage-green: #7c9a86;
-  --sage-light: #e8eee9;
-  --champagne: #fdfbf7;
-  --gold-accent: #d4af37;
-  --text-dark: #2c1e1c;
-  --text-light: #fdfbf7;
-  --card-bg: rgba(255, 255, 255, 0.85);
-  --glass-bg: rgba(253, 251, 247, 0.75);
+  --primary-floral: #e5cf22;
+  --primary-dark: #075f2a;
+  --sage-green: #18b944;
+  --sage-light: #e4efd8;
+  --champagne: #f5f1df;
+  --gold-accent: #f28a00;
+  --text-dark: #17351f;
+  --text-light: #fffaf0;
+  --card-bg: rgba(255, 255, 255, 0.9);
+  --glass-bg: rgba(245, 241, 223, 0.92);
   --transition-smooth: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
   --font-serif: 'Playfair Display', serif;
   --font-sans: 'Plus Jakarta Sans', sans-serif;
@@ -37,7 +37,7 @@ h1, h2, h3, h4, h5, h6, .display-font {
   background: var(--glass-bg);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
-  border-bottom: 1px solid rgba(211, 162, 151, 0.2);
+  border-bottom: 1px solid rgba(7, 95, 42, 0.18);
   transition: var(--transition-smooth);
 }
 
@@ -53,7 +53,7 @@ h1, h2, h3, h4, h5, h6, .display-font {
 .navbar-custom.navbar-scrolled {
   padding-top: 0.5rem !important;
   padding-bottom: 0.5rem !important;
-  box-shadow: 0 2px 12px rgba(74, 46, 43, 0.1);
+  box-shadow: 0 2px 12px rgba(7, 95, 42, 0.12);
 }
 
 .navbar-custom.navbar-scrolled .navbar-brand img {
@@ -70,7 +70,7 @@ h1, h2, h3, h4, h5, h6, .display-font {
 
 .navbar-custom .nav-link:hover,
 .navbar-custom .nav-link.active {
-  color: var(--primary-floral);
+  color: var(--primary-dark);
 }
 
 .navbar-custom .nav-link::after {
@@ -97,7 +97,7 @@ h1, h2, h3, h4, h5, h6, .display-font {
   position: absolute;
   top: -8px;
   right: -8px;
-  background-color: var(--primary-dark);
+  background-color: var(--gold-accent);
   color: var(--text-light);
   font-size: 0.7rem;
   padding: 0.25rem 0.45rem;
@@ -108,8 +108,7 @@ h1, h2, h3, h4, h5, h6, .display-font {
 
 /* Hero Section */
 .hero-section {
-  background: linear-gradient(135deg, rgba(211, 162, 151, 0.15) 0%, rgba(124, 154, 134, 0.15) 100%), 
-              url('../assets/images/flower_shop_hero.png') no-repeat center center;
+  background: url('../assets/images/flower_shop_hero.png') no-repeat center center;
   background-size: cover;
   min-height: 85vh;
   display: flex;
@@ -123,7 +122,7 @@ h1, h2, h3, h4, h5, h6, .display-font {
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(253, 251, 247, 0.15);
+  background: rgba(0, 0, 0, 0.04);
   z-index: 1;
 }
 
@@ -133,12 +132,12 @@ h1, h2, h3, h4, h5, h6, .display-font {
 }
 
 .hero-text-panel {
-  background: rgba(253, 251, 247, 0.72);
+  background: rgba(255, 253, 242, 0.76);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-radius: 20px;
-  border: 1px solid rgba(211, 162, 151, 0.25);
-  box-shadow: 0 8px 32px rgba(74, 46, 43, 0.08);
+  border: 1px solid rgba(24, 185, 68, 0.25);
+  box-shadow: 0 8px 32px rgba(7, 95, 42, 0.1);
   padding: 2.5rem !important;
 }
 
@@ -164,15 +163,15 @@ h1, h2, h3, h4, h5, h6, .display-font {
   font-weight: 600;
   letter-spacing: 0.5px;
   transition: var(--transition-smooth);
-  box-shadow: 0 4px 10px rgba(74, 46, 43, 0.15);
+  box-shadow: 0 4px 10px rgba(7, 95, 42, 0.18);
 }
 
 .btn-premium:hover {
-  background-color: var(--primary-floral);
+  background-color: var(--gold-accent);
   border-color: var(--primary-floral);
   color: var(--primary-dark);
   transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(211, 162, 151, 0.3);
+  box-shadow: 0 6px 15px rgba(244, 232, 74, 0.35);
 }
 
 .btn-outline-premium {
@@ -202,19 +201,19 @@ h1, h2, h3, h4, h5, h6, .display-font {
 }
 
 .btn-sage:hover {
-  background-color: #668270;
+  background-color: #0f8f34;
   color: var(--text-light);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(124, 154, 134, 0.3);
+  box-shadow: 0 4px 12px rgba(24, 185, 68, 0.3);
 }
 
 /* Product Cards */
 .product-card {
   background: var(--card-bg);
-  border: 1px solid rgba(211, 162, 151, 0.15);
+  border: 1px solid rgba(24, 185, 68, 0.16);
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(74, 46, 43, 0.05);
+  box-shadow: 0 10px 30px rgba(7, 95, 42, 0.06);
   transition: var(--transition-smooth);
   height: 100%;
   display: flex;
@@ -223,7 +222,7 @@ h1, h2, h3, h4, h5, h6, .display-font {
 
 .product-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 15px 35px rgba(74, 46, 43, 0.12);
+  box-shadow: 0 15px 35px rgba(7, 95, 42, 0.13);
   border-color: var(--primary-floral);
 }
 
@@ -313,7 +312,7 @@ h1, h2, h3, h4, h5, h6, .display-font {
   left: 0;
   right: 0;
   height: 2px;
-  background-color: rgba(211, 162, 151, 0.2);
+  background-color: rgba(24, 185, 68, 0.2);
   z-index: 1;
 }
 
@@ -329,7 +328,7 @@ h1, h2, h3, h4, h5, h6, .display-font {
   height: 50px;
   border-radius: 50%;
   background-color: var(--champagne);
-  border: 2px solid rgba(211, 162, 151, 0.4);
+  border: 2px solid rgba(24, 185, 68, 0.38);
   color: var(--primary-dark);
   display: flex;
   align-items: center;
@@ -343,7 +342,7 @@ h1, h2, h3, h4, h5, h6, .display-font {
   background-color: var(--primary-dark);
   border-color: var(--primary-dark);
   color: var(--text-light);
-  box-shadow: 0 0 15px rgba(74, 46, 43, 0.2);
+  box-shadow: 0 0 15px rgba(7, 95, 42, 0.22);
 }
 
 .wizard-step.completed .step-bubble {
@@ -374,8 +373,8 @@ h1, h2, h3, h4, h5, h6, .display-font {
 }
 
 .visualizer-container {
-  background: radial-gradient(circle, #ffffff 0%, #f4eae6 100%);
-  border: 1px solid rgba(211, 162, 151, 0.2);
+  background: radial-gradient(circle, #ffffff 0%, #edf9e8 100%);
+  border: 1px solid rgba(24, 185, 68, 0.2);
   border-radius: 24px;
   height: 500px;
   position: sticky;
@@ -443,7 +442,7 @@ h1, h2, h3, h4, h5, h6, .display-font {
   height: auto;
   display: block;
   object-fit: contain;
-  filter: drop-shadow(0 8px 8px rgba(74, 46, 43, 0.12));
+  filter: drop-shadow(0 8px 8px rgba(7, 95, 42, 0.13));
   animation: flowerRiseFromVase 0.5s ease-out both;
 }
 
@@ -461,12 +460,12 @@ h1, h2, h3, h4, h5, h6, .display-font {
 
 .selectable-card:hover {
   transform: translateY(-3px);
-  border-color: rgba(211, 162, 151, 0.4);
+  border-color: rgba(24, 185, 68, 0.42);
 }
 
 .selectable-card.selected {
   border-color: var(--primary-dark);
-  background-color: rgba(211, 162, 151, 0.05);
+  background-color: rgba(244, 232, 74, 0.13);
 }
 
 .selectable-card.selected::before {

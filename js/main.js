@@ -56,6 +56,49 @@ const DEFAULT_PRODUCTS = [
   }
 ];
 
+const DEFAULT_CATEGORIES = [
+  {
+    "id": "buques",
+    "nome": "Buquês",
+    "descricao": "Rosas, tulipas, flores campestres e mais.",
+    "icone": "💐",
+    "ativo": true,
+    "home": true
+  },
+  {
+    "id": "arranjos",
+    "nome": "Arranjos",
+    "descricao": "Composições elegantes montadas em vasos.",
+    "icone": "🏺",
+    "ativo": true,
+    "home": true
+  },
+  {
+    "id": "orquideas",
+    "nome": "Orquídeas",
+    "descricao": "Beleza exuberante e durabilidade em vasos.",
+    "icone": "🌸",
+    "ativo": true,
+    "home": true
+  },
+  {
+    "id": "cestas",
+    "nome": "Cestas",
+    "descricao": "Combinações completas com presentes finos.",
+    "icone": "🧺",
+    "ativo": true,
+    "home": true
+  },
+  {
+    "id": "pedidos-especiais",
+    "nome": "Pedidos Especiais",
+    "descricao": "Campanhas sazonais e datas comemorativas.",
+    "icone": "🎁",
+    "ativo": true,
+    "home": true
+  }
+];
+
 const DEFAULT_FLORES = [
   {
     "id": "f1",
@@ -253,6 +296,9 @@ function initDatabase() {
   if (!localStorage.getItem('floricultura_produtos')) {
     localStorage.setItem('floricultura_produtos', JSON.stringify(DEFAULT_PRODUCTS));
   }
+  if (!localStorage.getItem('floricultura_categorias')) {
+    localStorage.setItem('floricultura_categorias', JSON.stringify(DEFAULT_CATEGORIES));
+  }
   localStorage.setItem('floricultura_flores', JSON.stringify(DEFAULT_FLORES));
   localStorage.setItem('floricultura_vasos', JSON.stringify(DEFAULT_VASOS));
   localStorage.setItem('floricultura_complementos', JSON.stringify(DEFAULT_COMPLEMENTOS));
@@ -302,6 +348,7 @@ async function loadData(key, filePath, defaultData) {
 
 // Global getters
 async function getProducts() { return loadData('produtos', 'data/produtos.json', DEFAULT_PRODUCTS); }
+async function getCategories() { return loadData('categorias', 'data/categorias.json', DEFAULT_CATEGORIES); }
 async function getFlores() { return loadData('flores', 'data/flores.json', DEFAULT_FLORES); }
 async function getVasos() { return loadData('vasos', 'data/vasos.json', DEFAULT_VASOS); }
 async function getComplementos() { return loadData('complementos', 'data/complementos.json', DEFAULT_COMPLEMENTOS); }
@@ -315,6 +362,10 @@ function saveOrders(orders) {
   localStorage.setItem('floricultura_pedidos', JSON.stringify(orders));
 }
 
+function saveCategories(categories) {
+  localStorage.setItem('floricultura_categorias', JSON.stringify(categories));
+}
+
 function getEstoque() {
   const e = localStorage.getItem('floricultura_estoque');
   return e ? JSON.parse(e) : {};
@@ -322,6 +373,83 @@ function getEstoque() {
 
 function saveEstoque(estoque) {
   localStorage.setItem('floricultura_estoque', JSON.stringify(estoque));
+}
+
+// Stock recipes for pre-made catalog products.
+// Custom bouquets use their own composition data from the builder.
+const PRODUCT_STOCK_RECIPES = {
+  p1: { f1: 12, v4: 1 },
+  p2: { f3: 5, f6: 3, v2: 1 },
+  p3: { f4: 2, v2: 1 },
+  p4: { v4: 1 },
+  p5: { f5: 10, v4: 1 },
+  p6: { f4: 5, v2: 1 }
+};
+
+function getStockRequirementsForItem(item) {
+  const requirements = {};
+  const itemQty = item.quantidade || 1;
+
+  if (item.isCustom && item.composicao) {
+    const comp = item.composicao;
+    if (comp.base && comp.base.id) {
+      requirements[comp.base.id] = (requirements[comp.base.id] || 0) + itemQty;
+    }
+    for (const florId in comp.flores) {
+      requirements[florId] = (requirements[florId] || 0) + (comp.flores[florId] * itemQty);
+    }
+    return requirements;
+  }
+
+  const recipe = PRODUCT_STOCK_RECIPES[item.id];
+  if (!recipe) return requirements;
+
+  for (const stockId in recipe) {
+    requirements[stockId] = (requirements[stockId] || 0) + (recipe[stockId] * itemQty);
+  }
+
+  return requirements;
+}
+
+function mergeStockRequirements(items) {
+  const merged = {};
+  items.forEach(item => {
+    const requirements = getStockRequirementsForItem(item);
+    for (const stockId in requirements) {
+      merged[stockId] = (merged[stockId] || 0) + requirements[stockId];
+    }
+  });
+  return merged;
+}
+
+function checkStockAvailability(items) {
+  const stock = getEstoque();
+  const requirements = mergeStockRequirements(items);
+  const missing = [];
+
+  for (const stockId in requirements) {
+    const available = stock[stockId] || 0;
+    if (available < requirements[stockId]) {
+      missing.push({ id: stockId, available, needed: requirements[stockId] });
+    }
+  }
+
+  return { ok: missing.length === 0, missing };
+}
+
+function reduceStockForItems(items) {
+  const availability = checkStockAvailability(items);
+  if (!availability.ok) return false;
+
+  const stock = getEstoque();
+  const requirements = mergeStockRequirements(items);
+
+  for (const stockId in requirements) {
+    stock[stockId] = Math.max(0, (stock[stockId] || 0) - requirements[stockId]);
+  }
+
+  saveEstoque(stock);
+  return true;
 }
 
 // Shopping Cart operations
@@ -337,20 +465,30 @@ function saveCart(cart) {
 
 function addToCart(item) {
   const cart = getCart();
+  const itemToAdd = { ...item, quantidade: item.quantidade || 1 };
+  const simulatedCart = cart.map(cartItem => ({ ...cartItem }));
+
   // We can group pre-configured items by id, but custom bouquets are unique.
-  if (item.isCustom) {
-    cart.push(item);
+  if (itemToAdd.isCustom) {
+    simulatedCart.push(itemToAdd);
   } else {
-    const existingIndex = cart.findIndex(i => i.id === item.id && !i.isCustom);
+    const existingIndex = simulatedCart.findIndex(i => i.id === itemToAdd.id && !i.isCustom);
     if (existingIndex > -1) {
-      cart[existingIndex].quantidade += item.quantidade || 1;
+      simulatedCart[existingIndex].quantidade += itemToAdd.quantidade;
     } else {
-      item.quantidade = item.quantidade || 1;
-      cart.push(item);
+      simulatedCart.push(itemToAdd);
     }
   }
-  saveCart(cart);
-  showToast(`"${item.nome}" adicionado ao carrinho!`);
+
+  const availability = checkStockAvailability(simulatedCart);
+  if (!availability.ok) {
+    showToast(`Estoque insuficiente para adicionar "${itemToAdd.nome}".`);
+    return false;
+  }
+
+  saveCart(simulatedCart);
+  showToast(`"${itemToAdd.nome}" adicionado ao carrinho!`);
+  return true;
 }
 
 function updateCartBadge() {
@@ -378,8 +516,8 @@ function showToast(message) {
   }
 
   const toast = document.createElement('div');
-  toast.style.background = '#4a2e2b';
-  toast.style.color = '#fdfbf7';
+  toast.style.background = '#075f2a';
+  toast.style.color = '#fffef4';
   toast.style.padding = '0.85rem 1.5rem';
   toast.style.borderRadius = '30px';
   toast.style.marginTop = '10px';
@@ -391,7 +529,11 @@ function showToast(message) {
   toast.style.gap = '8px';
   toast.style.animation = 'fadeIn 0.3s cubic-bezier(0.25, 0.8, 0.25, 1)';
   
-  toast.innerHTML = `<span>✿</span> ${message}`;
+  const icon = document.createElement('span');
+  icon.innerText = '✿';
+  const text = document.createElement('span');
+  text.innerText = message;
+  toast.append(icon, text);
   
   container.appendChild(toast);
   
@@ -496,7 +638,7 @@ function renderHeaderFooter() {
           <hr class="my-4" style="border-color: rgba(255,255,255,0.1);">
           <div class="row align-items-center">
             <div class="col-md-6 text-center text-md-start">
-              <p class="mb-0 text-white-50 small">&copy; 2026 Bella Fioritura. Todos os direitos reservados. Projeto Acadêmico / Protótipo.</p>
+              <p class="mb-0 text-white-50 small">&copy; 2026 Bella Fioritura. Todos os direitos reservados.</p>
             </div>
             <div class="col-md-6 text-center text-md-end mt-3 mt-md-0">
               <span class="text-white-50 small">Desenvolvido por Matheus Barcelos Alves - matheusbarcelosbr@gmail.com</span>
