@@ -18,7 +18,7 @@
   <header id="global-header"></header>
 
   <!-- Page Banner -->
-  <section class="py-4 bg-white border-bottom shadow-sm">
+  <section class="py-4 page-banner">
     <div class="container text-center">
       <h1 class="h2 mb-1">Finalização do Pedido</h1>
       <p class="text-muted mb-0 small">Insira as informações de entrega e efetue o pagamento seguro.</p>
@@ -34,9 +34,9 @@
         <div class="col-lg-7">
           
           <!-- Personal Information Card -->
-          <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 20px; background-color: var(--glass-bg);">
+          <div class="card border-0 shadow-sm p-4 mb-4 theme-panel" style="border-radius: 20px;">
             <h2 class="h5 mb-3 text-dark">1. Informações de Contato</h2>
-            <div style="width: 30px; height: 2px; background-color: var(--primary-floral); margin-bottom: 20px;"></div>
+            <div class="section-divider"></div>
             
             <div class="row g-3">
               <div class="col-sm-6">
@@ -58,9 +58,9 @@
           </div>
           
           <!-- Delivery Schedule Card -->
-          <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 20px; background-color: var(--glass-bg);" id="delivery-address-card">
+          <div class="card border-0 shadow-sm p-4 mb-4 theme-panel" style="border-radius: 20px;" id="delivery-address-card">
             <h2 class="h5 mb-3 text-dark">2. Endereço e Agendamento da Entrega</h2>
-            <div style="width: 30px; height: 2px; background-color: var(--primary-floral); margin-bottom: 20px;"></div>
+            <div class="section-divider"></div>
             
             <div class="row g-3">
               <!-- Address Details (Only enabled if delivery shipping is chosen) -->
@@ -112,9 +112,9 @@
           </div>
           
           <!-- Card/Gift message -->
-          <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 20px; background-color: var(--glass-bg);">
+          <div class="card border-0 shadow-sm p-4 mb-4 theme-panel" style="border-radius: 20px;">
             <h2 class="h5 mb-3 text-dark">3. Mensagem para o Cartão de Presente (Opcional)</h2>
-            <div style="width: 30px; height: 2px; background-color: var(--primary-floral); margin-bottom: 20px;"></div>
+            <div class="section-divider"></div>
             
             <div>
               <label for="c-mensagem" class="form-label small fw-bold">Escreva sua Mensagem</label>
@@ -127,9 +127,9 @@
         <div class="col-lg-5">
           
           <!-- Summary Review Card -->
-          <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 20px; background-color: var(--glass-bg);">
+          <div class="card border-0 shadow-sm p-4 mb-4 theme-panel" style="border-radius: 20px;">
             <h2 class="h5 mb-3 text-dark">Itens do Pedido</h2>
-            <div style="width: 30px; height: 2px; background-color: var(--primary-floral); margin-bottom: 20px;"></div>
+            <div class="section-divider"></div>
             
             <div id="checkout-summary-items-list" class="mb-3">
               <!-- Rendered dynamically by js/checkout.js -->
@@ -152,19 +152,19 @@
           </div>
           
           <!-- Payment Selection Card -->
-          <div class="card border-0 shadow-sm p-4" style="border-radius: 20px; background-color: var(--glass-bg);">
+          <div class="card border-0 shadow-sm p-4 theme-panel" style="border-radius: 20px;">
             <h2 class="h5 mb-3 text-dark">4. Forma de Pagamento</h2>
-            <div style="width: 30px; height: 2px; background-color: var(--primary-floral); margin-bottom: 20px;"></div>
+            <div class="section-divider"></div>
             
             <!-- Radios selections -->
             <div class="d-flex gap-3 mb-3">
-              <div class="form-check flex-fill p-2.5 border rounded" style="background-color: white;">
+              <div class="form-check flex-fill p-2.5 border rounded theme-surface">
                 <input class="form-check-input ms-1" type="radio" name="paymentOption" id="pay-pix" value="PIX" checked>
                 <label class="form-check-label small fw-bold ms-2" for="pay-pix">
                   ⚡ PIX (Imediato)
                 </label>
               </div>
-              <div class="form-check flex-fill p-2.5 border rounded" style="background-color: white;">
+              <div class="form-check flex-fill p-2.5 border rounded theme-surface">
                 <input class="form-check-input ms-1" type="radio" name="paymentOption" id="pay-card" value="CARTAO">
                 <label class="form-check-label small fw-bold ms-2" for="pay-card">
                   💳 Cartão de Crédito
@@ -173,7 +173,7 @@
             </div>
             
             <!-- Credit Card Form Fields -->
-            <div id="credit-card-fields-box" class="d-none border p-3 rounded mb-4" style="background-color: white; animation: fadeIn 0.3s ease;">
+            <div id="credit-card-fields-box" class="d-none border p-3 rounded mb-4 theme-surface" style="animation: fadeIn 0.3s ease;">
               <h3 class="h6 mb-3 text-muted text-uppercase small" style="letter-spacing: 0.5px;">Dados do Cartão</h3>
               <div class="row g-2">
                 <div class="col-12">
@@ -210,7 +210,7 @@
   <main class="container py-5 d-none" id="payment-simulator-view">
     <div class="row justify-content-center">
       <div class="col-md-7 col-lg-6">
-        <div class="card border-0 shadow p-5 text-center" style="border-radius: 28px; background-color: var(--glass-bg);">
+        <div class="card border-0 shadow p-5 text-center theme-panel" style="border-radius: 28px;">
           
           <!-- State 1: Awaiting Payment -->
           <div id="sim-state-waiting">

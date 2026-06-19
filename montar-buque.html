@@ -18,7 +18,7 @@
   <header id="global-header"></header>
 
   <!-- Page Banner -->
-  <section class="py-4 bg-white border-bottom shadow-sm">
+  <section class="py-4 page-banner">
     <div class="container text-center">
       <h1 class="h2 mb-1">Configurador de Buquês Artesanais</h1>
       <p class="text-muted mb-0 small">Siga as etapas para criar uma obra de arte floral do seu jeito.</p>
@@ -33,7 +33,7 @@
       <div class="col-lg-5">
         <div class="visualizer-container sticky-lg-top" style="top: 105px;">
           <!-- Studio Header Info -->
-          <div class="position-absolute w-100 p-3 d-flex justify-content-between align-items-center" style="z-index: 20; background: linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 100%);">
+          <div class="position-absolute w-100 p-3 d-flex justify-content-between align-items-center" style="z-index: 20; background: linear-gradient(180deg, rgba(245,241,223,0.94) 0%, rgba(245,241,223,0) 100%);">
             <div>
               <span class="badge bg-secondary mb-1 text-uppercase" style="font-size:0.65rem;">Visualização Virtual</span>
               <h2 class="h6 mb-0 text-dark" id="visualizer-title">Seu Buquê Personalizado</h2>
@@ -60,7 +60,7 @@
             <div id="kraft-bottom-overlay" class="w-100 text-center position-absolute" style="z-index: 20; pointer-events: none; display: none; bottom: 0;"></div>
             
             <!-- Floating price badge -->
-            <div class="position-absolute bottom-3 right-3 bg-white px-3 py-2 rounded-pill shadow-sm d-flex align-items-center gap-2" style="z-index: 20; border: 1px solid rgba(0,0,0,0.05); bottom: 15px; right: 15px;">
+            <div class="position-absolute bottom-3 right-3 px-3 py-2 rounded-pill shadow-sm d-flex align-items-center gap-2 theme-surface" style="z-index: 20; bottom: 15px; right: 15px;">
               <span class="small text-muted">Total:</span>
               <span class="fw-bold text-dark" id="visualizer-total-price">R$ 0,00</span>
             </div>
@@ -97,7 +97,7 @@
           </div>
         </div>
 
-        <div class="card border-0 shadow-sm p-4" style="border-radius: 24px; background-color: var(--glass-bg);">
+        <div class="card border-0 shadow-sm p-4 theme-panel" style="border-radius: 24px;">
           
           <!-- STEP 1: Choose Recipient Base -->
           <div class="wizard-pane active" id="pane-1">
@@ -130,7 +130,7 @@
             <h3 class="h4 mb-2">Etapa 3: Revise o seu Buquê Personalizado</h3>
             <p class="text-muted small mb-4">Confira toda a composição antes de avançar para o carrinho.</p>
             
-            <div class="bg-white p-4 rounded-3 border mb-4">
+            <div class="p-4 rounded-3 border mb-4 theme-surface">
               <h4 class="h5 mb-3 text-dark border-bottom pb-2">Composição do Pedido</h4>
               
               <!-- Base summary -->

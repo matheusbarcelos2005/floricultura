@@ -26,10 +26,59 @@ body {
   line-height: 1.6;
 }
 
+.bg-white {
+  background-color: var(--card-bg) !important;
+}
+
+.bg-light {
+  background-color: var(--sage-light) !important;
+}
+
 h1, h2, h3, h4, h5, h6, .display-font {
   font-family: var(--font-serif);
   color: var(--primary-dark);
   font-weight: 700;
+}
+
+.page-banner {
+  background: linear-gradient(135deg, rgba(228, 239, 216, 0.95) 0%, rgba(245, 241, 223, 0.98) 100%);
+  border-bottom: 1px solid rgba(7, 95, 42, 0.16);
+  box-shadow: 0 6px 20px rgba(7, 95, 42, 0.06);
+}
+
+.theme-panel {
+  background-color: var(--glass-bg) !important;
+  border: 1px solid rgba(7, 95, 42, 0.12) !important;
+}
+
+.theme-surface {
+  background-color: var(--card-bg) !important;
+  border: 1px solid rgba(7, 95, 42, 0.1) !important;
+}
+
+.admin-card,
+#stats-pane .card,
+#produtos-pane .card,
+#orders-pane .card,
+#stock-pane .card {
+  background-color: var(--glass-bg) !important;
+  border: 1px solid rgba(7, 95, 42, 0.12) !important;
+}
+
+.table-light,
+.table > :not(caption) > * > * {
+  --bs-table-bg: rgba(245, 241, 223, 0.7);
+}
+
+.theme-soft-section {
+  background-color: var(--sage-light) !important;
+}
+
+.section-divider {
+  width: 30px;
+  height: 2px;
+  background-color: var(--primary-floral);
+  margin-bottom: 20px;
 }
 
 /* Navbar Premium styling */
